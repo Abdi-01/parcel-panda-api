@@ -3,6 +3,10 @@ const app = express()
 const port = 8031
 const cors = require('cors')
 const bearerToken = require('express-bearer-token')
+const fs = require('fs')
+const dotenv = require('dotenv')
+
+dotenv.config()
 
 const { db } = require('./config/database')
 const { profileRouter } = require('./routes')
