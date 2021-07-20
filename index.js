@@ -3,8 +3,8 @@ const app = express()
 const port = 8031
 const cors = require('cors')
 const bearerToken = require('express-bearer-token')
-const fs = require('fs')
 const dotenv = require('dotenv')
+
 
 dotenv.config()
 
@@ -13,6 +13,7 @@ const { profileRouter } = require('./routes')
 
 app.use(cors()) // get data from front-end
 app.use(express.json()) // get json body
+app.use(express.static('public')) // access static files in public folder
 app.use(bearerToken()) // read token 
 app.use('/profile', profileRouter)
 
@@ -36,3 +37,4 @@ app.use((error, request, response, next) => {
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
 })
+
