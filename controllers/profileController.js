@@ -1,4 +1,5 @@
-const { db, dbQuery } = require('../config')
+const { db, dbQuery, uploader } = require('../config')
+const fs = require('fs')
 
 module.exports = {
     getProfile: async (req, res, next) => {
@@ -94,11 +95,20 @@ module.exports = {
     },
 
     updatePhoto: async (req, res, next) => {
-        try {
-            console.log("Upload Photo Profile")
-            let auth = 2
-        } catch (error) {
-            next(error)
-        }
+        console.log("Check first req", req.files)
+        const upload = uploader('/images', 'IMG').fields([{ name: 'images' }])
+        upload (req, res, async (error) => {
+            try {
+                const { images } = req.files
+                console.log("cek file upload :", images, req.files.images[0])
+            } catch (error) {
+                // delete image when upload process error
+                fs.unlinkSync(`./public/images/${req.files.images[0].filename}`)
+                // error catch from query
+                console.log(error)
+                // error from upload function
+                next(err)
+            }
+        })
     },
 }

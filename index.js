@@ -3,8 +3,8 @@ const app = express()
 const port = 8031
 const cors = require('cors')
 const bearerToken = require('express-bearer-token')
-const fs = require('fs')
 const dotenv = require('dotenv')
+
 
 dotenv.config()
 
@@ -12,6 +12,7 @@ const { db } = require('./config/database')
 
 app.use(cors()) // get data from front-end
 app.use(express.json()) // get json body
+app.use(express.static('public')) // access static files in public folder
 app.use(bearerToken()) // read token 
 app.use(express.static('public')) // untuk memberikan akses langsung ke direktori
 
