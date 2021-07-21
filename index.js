@@ -1,34 +1,41 @@
 const express = require('express')
 const app = express()
-const PORT = 8031
+const port = 8031
 const cors = require('cors')
 const bearerToken = require('express-bearer-token')
+const fs = require('fs')
+const dotenv = require('dotenv')
 
-app.use(cors())
-app.use(bearerToken()) // untuk mengmbil data authorization atau token dari req header yg dikirim oleh front end
-app.use(express.json()) //untuk menangkap data dari request body URL
-
-app.use(express.static('public')) // untuk memberikan akses langsung ke direktori
+dotenv.config()
 
 const { db } = require('./config/database')
 
-db.getConnection((err, connection) => {
-    if (err) {
-        return console.error('Error MySQL', err.message)
-    }
-    console.log(`Connected to MySQL Server: ${connection.threadId}`)
-})
+app.use(cors()) // get data from front-end
+app.use(express.json()) // get json body
+app.use(bearerToken()) // read token 
+app.use(express.static('public')) // untuk memberikan akses langsung ke direktori
 
-app.get('/', (req, res) => {
-    res.status(200).send(`<h1>Parcel</h1>`)
-})
-
-const { userRouter } = require('./routers')
+const { profileRouter, userRouter } = require('./routers')
+app.use('/profile', profileRouter)
 app.use('/auth', userRouter)
 
-app.use((error, req, res, next) => {
-    console.log("Handling Error", error)
-    res.status(500).send({ status: 'Error Mysql', message: error })
+app.get('/', (req, res) => {
+    res.send('Hello')
 })
 
-app.listen(PORT, () => console.log("PARCEL API RUNNING", PORT))
+db.getConnection((error, connection) => {
+    if (error) {
+        return console.error('Error connecting mysql: ', error.stack)
+    }
+    console.log(`Connecting to MySQL Server as ID: ${connection.threadId}`)
+})
+
+// Error handling 
+app.use((error, request, response, next) => {
+    console.log("Error", error)
+    response.status(500).send({ status: "Error MySQL!", messages: error })
+})
+
+app.listen(port, () => {
+    console.log(`App listening at http://localhost:${port}`)
+})
