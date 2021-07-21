@@ -24,12 +24,23 @@ module.exports = {
                     // Membuat Config email
                     // 1. KONTEN EMAIL
                     let mail = {
-                        from: 'Admin PARCELPANDA <ssafinatunnajah@gmail.com>', //email pengirim sesuai dengan config nodemailer
+                        from: 'Admin PARCELPANDA <adm.parcelpanda@gmail.com>', //email pengirim sesuai dengan config nodemailer
                         to: email, //email penerima sesuai data Select dari database
                         subject: '[PARCELPANDA] Verification Email',
-                        html: `<div style="text-align: 'center'">
-                        <p>Your OTP: <b>${otp}</b></p>
-                        <a href='http://localhost:3000/verification/${token}'>Verification your Email</a></div>`
+                        html: `<div style="text-align: center">
+                        <div height="250px" width="300px">
+                        <img src="cid:logo"/>
+                        </div>
+                        <h1>Hello, ${username}!</h1>
+                        <h3 style="color: gray;">Your OTP: <b>${otp}</b></h3>
+                        <a href='http://localhost:3000/verification/${token}' style="text-decoration: none; word-break: break-all;">Verification your Email</a></div>`,
+                        attachments: [
+                            {
+                                filename: 'logo.PNG',
+                                path: './public/images/logo.PNG',
+                                cid: 'logo'
+                            }
+                        ]
                     }
                     // 2. CONFIG TRANSPORTER
                     await transporter.sendMail(mail)
@@ -60,18 +71,29 @@ module.exports = {
     login: async (req, res, next) => {
         try {
             if (req.body.username && req.body.password) {
-                // if (req.user.status == 'verified') {
-                let loginSQL = `Select * from user where username = ${db.escape(req.body.username)} and password = ${db.escape(req.body.password)};`
-                loginSQL = await dbQuery(loginSQL)
+                if (req.body.username.includes("@") || req.body.username.includes(".com") || req.body.username.includes(".co.id")) {
+                    let loginSQL = `Select * from user where email = ${db.escape(req.body.username)} and password = ${db.escape(req.body.password)};`
+                    loginSQL = await dbQuery(loginSQL)
 
-                let getUser = await dbQuery(`Select * from user where id = ${loginSQL[0].id}`)
-                let { id, username, fullname, email, password, role, idstatus, otp } = getUser[0]
+                    let getUser = await dbQuery(`Select * from user where id = ${loginSQL[0].id}`)
+                    let { id, username, fullname, email, password, role, idstatus, otp } = getUser[0]
 
-                //TOKEN
-                let token = createToken({ id, username, fullname, email, password, role, idstatus, otp })
+                    //TOKEN
+                    let token = createToken({ id, username, fullname, email, password, role, idstatus, otp })
 
-                res.status(200).send({ id, username, fullname, email, password, role, idstatus, otp, token })
-                // }
+                    res.status(200).send({ id, username, fullname, email, password, role, idstatus, otp, token })
+                } else {
+                    let loginSQL = `Select * from user where username = ${db.escape(req.body.username)} and password = ${db.escape(req.body.password)};`
+                    loginSQL = await dbQuery(loginSQL)
+
+                    let getUser = await dbQuery(`Select * from user where id = ${loginSQL[0].id}`)
+                    let { id, username, fullname, email, password, role, idstatus, otp } = getUser[0]
+
+                    //TOKEN
+                    let token = createToken({ id, username, fullname, email, password, role, idstatus, otp })
+
+                    res.status(200).send({ id, username, fullname, email, password, role, idstatus, otp, token })
+                }
             }
         } catch (error) {
             next(error)
@@ -111,12 +133,23 @@ module.exports = {
                 //TOKEN
                 let token = createToken({ id, username, fullname, email, password, role, idstatus, otp })
                 let mail = {
-                    from: 'Admin PARCELPANDA <ssafinatunnajah@gmail.com>', //email pengirim sesuai dengan config nodemailer
+                    from: 'Admin PARCELPANDA <adm.parcelpanda@gmail.com>', //email pengirim sesuai dengan config nodemailer
                     to: email, //email penerima sesuai data Select dari database
-                    subject: '[PARCELPANDA] Re-Verification Email',
-                    html: `<div style="text-align: 'center'">
-                    <p>Hello, ${username}, Your New OTP: <b>${otp}</b></p>
-                    <a href='http://localhost:3000/verification/${token}'>Verification your Email</a></div>`
+                    subject: '[PARCELPANDA] Verification Email',
+                    html: `<div style="text-align: center">
+                    <div height="250px" width="300px">
+                    <img src="cid:logo"/>
+                    </div>
+                    <h1>Hello, ${username}!</h1>
+                    <h3 style="color: gray;">Your OTP: <b>${otp}</b></h3>
+                    <a href='http://localhost:3000/verification/${token}' style="text-decoration: none; word-break: break-all;">Verification your Email</a></div>`,
+                    attachments: [
+                        {
+                            filename: 'logo.PNG',
+                            path: './public/images/logo.PNG',
+                            cid: 'logo'
+                        }
+                    ]
                 }
                 // 2. CONFIG TRANSPORTER
                 await transporter.sendMail(mail)
@@ -146,12 +179,23 @@ module.exports = {
                 // Membuat Token
                 let token = createToken({ id, username, fullname, email, password, role, idstatus, otp })
                 let mail = {
-                    from: 'Admin PARCELPANDA <ssafinatunnajah@gmail.com>', //email pengirim sesuai dengan config nodemailer
+                    from: 'Admin PARCELPANDA <adm.parcelpanda@gmail.com>', //email pengirim sesuai dengan config nodemailer
                     to: email, //email penerima sesuai data Select dari database
-                    subject: '[PARCELPANDA] Re-Verification Email',
-                    html: `<div style="text-align: 'center'">
-                    <p>Hello, ${username}, Your New OTP: <b>${otp}</b></p>
-                    <a href='http://localhost:3000/verification/${token}'>Verification your Email</a></div>`
+                    subject: '[PARCELPANDA] Verification Email',
+                    html: `<div style="text-align: center">
+                    <div height="250px" width="300px">
+                    <img src="cid:logo"/>
+                    </div>
+                    <h1>Hello, ${username}!</h1>
+                    <h3 style="color: gray;">Your OTP: <b>${otp}</b></h3>
+                    <a href='http://localhost:3000/verification/${token}' style="text-decoration: none; word-break: break-all;">Verification your Email</a></div>`,
+                    attachments: [
+                        {
+                            filename: 'logo.PNG',
+                            path: './public/images/logo.PNG',
+                            cid: 'logo'
+                        }
+                    ]
                 }
                 // 2. CONFIG TRANSPORTER
                 await transporter.sendMail(mail)

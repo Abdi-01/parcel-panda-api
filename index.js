@@ -14,7 +14,6 @@ app.use(cors()) // get data from front-end
 app.use(express.json()) // get json body
 app.use(express.static('public')) // access static files in public folder
 app.use(bearerToken()) // read token 
-app.use(express.static('public')) // untuk memberikan akses langsung ke direktori
 
 const { profileRouter, userRouter } = require('./routers')
 app.use('/profile', profileRouter)
