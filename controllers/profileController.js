@@ -7,7 +7,7 @@ module.exports = {
             // console.log("Read Profile", req.user.id)
             let auth = req.user.id
             if (auth) {
-                let queryReadProfile = `SELECT id, username, fullname, gender, email, age, role, idstatus FROM user WHERE user.id = ${auth}`
+                let queryReadProfile = `SELECT id, username, fullname, gender, email, age, role, idstatus, url_photo FROM user WHERE user.id = ${auth}`
                 let queryReadAddress = `SELECT id, label, recipient_name, phone_number, city, postal_code, address FROM address where iduser = ${auth}`
                 let dataProfile = await dbQuery(queryReadProfile)
                 let dataAddress = await dbQuery(queryReadAddress)
@@ -15,7 +15,7 @@ module.exports = {
                 // console.log(dataProfile[0])
                 res.status(200).send(dataProfile)
             } else {
-                res.status(400).send('Must login!')
+                res.status(400).send('must login!')
             }
         } catch (error) {
             next(error)
@@ -40,7 +40,7 @@ module.exports = {
                     res.status(400).send({message: "update profile failed"})
                 }
             } else {
-                res.status(400).send('Must login!')
+                res.status(400).send('must login!')
             }
         } catch (error) {
             next(error)
@@ -53,15 +53,15 @@ module.exports = {
             let auth = req.user.id
             // let auth = 2
             if (auth) {
-                let queryInsertAddress = `INSERT INTO address (iduser, label, recipient_name, phone_number, city, postal_code, address) VALUES (${db.escape(req.body.iduser)}, ${db.escape(req.body.label)}, ${db.escape(req.body.recipient_name)}, ${db.escape(req.body.phone_number)}, ${db.escape(req.body.city)}, ${db.escape(req.body.postal_code)}, ${db.escape(req.body.address)})`
+                let queryInsertAddress = `INSERT INTO address (iduser, label, recipient_name, phone_number, city, postal_code, address) VALUES (${auth}, ${db.escape(req.body.label)}, ${db.escape(req.body.recipient_name)}, ${db.escape(req.body.phone_number)}, ${db.escape(req.body.city)}, ${db.escape(req.body.postal_code)}, ${db.escape(req.body.address)})`
                 let response = await dbQuery(queryInsertAddress)
                 if (response.affectedRows > 0) {
-                    res.status(200).send({message: "Address has been added"})
+                    res.status(200).send({message: "address has been added"})
                 } else {
-                    res.status(400).send({message: "Adding address failed"})
+                    res.status(400).send({message: "adding address failed"})
                 }
             } else {
-                res.status(400).send('Must login!')
+                res.status(400).send('must login!')
             }
         } catch (error) {
             next(error)
@@ -81,12 +81,32 @@ module.exports = {
                 let queryUpdateAddress = `UPDATE address SET ${value.join(', ')} WHERE id = ${req.body.id}`
                 let response = await dbQuery(queryUpdateAddress)
                 if (response.affectedRows > 0) {
-                    res.status(200).send({message: "Address has been updated"})
+                    res.status(200).send({message: "address has been updated"})
                 } else {
-                    res.status(400).send({message: "Update address failed"})
+                    res.status(400).send({message: "update address failed"})
                 }
             } else {
-                res.status(400).send('Must login!')
+                res.status(400).send('must login!')
+            }
+        } catch (error) {
+            next(error)
+        }
+    },
+
+    deleteAddress: async (req, res, next) => {
+        try {
+            let auth = req.user.id
+            let id = req.params.id
+            if (auth) {
+                let queryDeleteAddress = `DELETE FROM address WHERE id = ${id}`
+                let response = await dbQuery(queryDeleteAddress)
+                if (response.affectedRows > 0) {
+                    res.status(200).send({message: "address has been deleted"})
+                } else {
+                    res.status(400).send({message: "delete address failed"})
+                }
+            } else {
+                res.status(400).send('must login!')
             }
         } catch (error) {
             next(error)
@@ -103,12 +123,12 @@ module.exports = {
                 let queryUpdateAddress = `UPDATE user SET password = ${db.escape(req.body.confirmPassword)} WHERE id = ${auth}`
                 let response = await dbQuery(queryUpdateAddress)
                 if (response.affectedRows > 0) {
-                    res.status(200).send({message: "Password has been updated"})
+                    res.status(200).send({message: "password has been updated"})
                 } else {
-                    res.status(400).send({message: "Update password failed"})
+                    res.status(400).send({message: "update password failed"})
                 }
             } else {
-                res.status(400).send('Please check your password')
+                res.status(400).send('please check your password')
             }
         } catch (error) {
             next(error)
@@ -116,15 +136,24 @@ module.exports = {
     },
 
     updatePhoto: async (req, res, next) => {
-        console.log("Check first req", req.files)
         const upload = uploader('/images', 'IMG').fields([{ name: 'images' }])
         upload (req, res, async (error) => {
             try {
-                const { images } = req.files
-                console.log("cek file upload :", images, req.files.images[0])
+                console.log("Check first req", req.files)
+                let auth = req.user.id
+                // const { images } = req.files
+                // console.log("cek file upload :", images, req.files.images[0])
+                // let image = req.files.images[0].filename
+                // let queryUpdateImage = `UPDATE user SET url_photo = ${image} WHERE id = ${auth}`
+                // let response = await dbQuery(queryUpdateImage)
+                // if (response.affectedRows > 0) {
+                //     res.status(200).send({message: "photo has been updated"})
+                // } else {
+                //     res.status(400).send({message: "update photo failed"})
+                // }
             } catch (error) {
                 // delete image when upload process error
-                fs.unlinkSync(`./public/images/${req.files.images[0].filename}`)
+                // fs.unlinkSync(`./public/images/${req.files.images[0].filename}`)
                 // error catch from query
                 console.log(error)
                 // error from upload function
