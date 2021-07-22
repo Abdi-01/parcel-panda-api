@@ -141,9 +141,16 @@ module.exports = {
             try {
                 // console.log("Check first req", req.files)
                 let auth = req.user.id
-                const { images } = req.files
                 // console.log("cek file upload :", images, req.files.images[0])
                 let image = req.files.images[0].filename
+                let querySelectImage = `SELECT url_photo FROM user WHERE id = ${auth}`
+                let imgResponse = await dbQuery(querySelectImage)
+                // console.log(imgResponse)
+                if (imgResponse[0].url_photo !== null) {
+                    if (imgResponse[0].url_photo.length > 0) {
+                        fs.unlinkSync(`./public/images/${imgResponse[0].url_photo}`)
+                    }
+                }
                 let queryUpdateImage = `UPDATE user SET url_photo = ${db.escape(image)} WHERE id = ${auth}`
                 let response = await dbQuery(queryUpdateImage)
                 if (response.affectedRows > 0) {
