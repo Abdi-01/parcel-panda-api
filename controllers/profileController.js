@@ -139,21 +139,21 @@ module.exports = {
         const upload = uploader('/images', 'IMG').fields([{ name: 'images' }])
         upload (req, res, async (error) => {
             try {
-                console.log("Check first req", req.files)
+                // console.log("Check first req", req.files)
                 let auth = req.user.id
-                // const { images } = req.files
+                const { images } = req.files
                 // console.log("cek file upload :", images, req.files.images[0])
-                // let image = req.files.images[0].filename
-                // let queryUpdateImage = `UPDATE user SET url_photo = ${image} WHERE id = ${auth}`
-                // let response = await dbQuery(queryUpdateImage)
-                // if (response.affectedRows > 0) {
-                //     res.status(200).send({message: "photo has been updated"})
-                // } else {
-                //     res.status(400).send({message: "update photo failed"})
-                // }
+                let image = req.files.images[0].filename
+                let queryUpdateImage = `UPDATE user SET url_photo = ${db.escape(image)} WHERE id = ${auth}`
+                let response = await dbQuery(queryUpdateImage)
+                if (response.affectedRows > 0) {
+                    res.status(200).send({message: "photo has been updated"})
+                } else {
+                    res.status(400).send({message: "update photo failed"})
+                }
             } catch (error) {
                 // delete image when upload process error
-                // fs.unlinkSync(`./public/images/${req.files.images[0].filename}`)
+                fs.unlinkSync(`./public/images/${req.files.images[0].filename}`)
                 // error catch from query
                 console.log(error)
                 // error from upload function

@@ -4,6 +4,7 @@ const port = 8031
 const cors = require('cors')
 const bearerToken = require('express-bearer-token')
 const dotenv = require('dotenv')
+const path = require('path')
 
 dotenv.config()
 
@@ -11,7 +12,7 @@ const { db } = require('./config/database')
 
 app.use(cors()) // get data from front-end
 app.use(express.json()) // get json body
-app.use(express.static('public')) // access static files in public folder
+app.use('/static', express.static(path.join(__dirname, 'public'))) // access static files in public folder
 app.use(bearerToken()) // read token 
 
 const { profileRouter, userRouter } = require('./routers')

@@ -4,18 +4,17 @@ const fs = require('fs')
 module.exports = {
     uploader: (directory, fileNamePrefix) => {
         // default directory
-        console.log("Go to uploader function")
+        // console.log("Go to uploader function")
         let defaultDir = './public'
 
         // diskStorage: saving file in local directory
         const storage = multer.diskStorage({
             destination: (req, file, cb) => {
                 const pathDir = directory ? defaultDir + directory : defaultDir
-
-                console.log("Go to destination function")
+                // console.log("Go to destination function")
                 // Check directory in local Back End
                 if (fs.existsSync(pathDir)) {
-                    console.log('Directory Exist')
+                    // console.log('Directory Exist')
                     cb(null, pathDir)
                 }
                 else {
@@ -25,7 +24,7 @@ module.exports = {
             }, 
 
             filename: (req, file, cb) => {
-                console.log("Go to filename function")
+                // console.log("Go to filename function")
                 let ext = file.originalname.split('.')
                 let filename = fileNamePrefix + Date.now() + '.' + ext[ext.length - 1]
                 cb(null, filename)
@@ -33,8 +32,8 @@ module.exports = {
         })
 
         const fileFilter = (req, file, cb) => {
-            console.log("Go to fileFilter function", file)
-            const ext = /\.(jpg|jpeg|png|pdf|docx|gif|xlsx|txt)/
+            // console.log("Go to fileFilter function", file)
+            const ext = /\.(jpg|JPG|jpeg|JPEG|png|PNG)/
             if (!file.originalname.match(ext)) {
                 return cb(new Error('Your file type are denied'), false)
             }
