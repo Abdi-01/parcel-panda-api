@@ -1,11 +1,11 @@
-// password 2FA Gmail : ylwbwypxhhttense
+// password 2FA Gmail : ttkykvkhkxdbufee
 
 const nodemailer = require('nodemailer')
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'ssafinatunnajah@gmail.com',
-        pass: 'ylwbwypxhhttense',
+        user: 'adm.parcelpanda@gmail.com',
+        pass: 'ttkykvkhkxdbufee',
     },
     tls: {
         rejectUnauthorized: false
