@@ -56,20 +56,21 @@ module.exports = {
             next(error)
         }
     },
+
     verify: async (req, res, next) => {
         try {
-            console.log("hasil readToken", req.user)
             let update = `Update user set idstatus = '1' where otp = ${db.escape(req.body.otp)};`
             let response = await dbQuery(update)
             if (response.affectedRows > 0) {
                 res.status(200).send({message: "Account has been verified"})
             } else {
-                res.status(400).send({error: "Update account failed"})
+                res.status(400).send({message: "Account failed to verified"})
             }
         } catch (error) {
             next(error)
         }
     },
+
     login: async (req, res, next) => {
         try {
             if (req.body.username && req.body.password) {
