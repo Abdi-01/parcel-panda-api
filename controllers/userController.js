@@ -60,10 +60,12 @@ module.exports = {
         try {
             console.log("hasil readToken", req.user)
             let update = `Update user set idstatus = '1' where otp = ${db.escape(req.body.otp)};`
-            update = await dbQuery(update)
-            let get = `Select * from user where otp = ${db.escape(req.body.otp)};`
-            get = await dbQuery(get)
-            res.status(200).send(get)
+            let response = await dbQuery(update)
+            if (response.affectedRows > 0) {
+                res.status(200).send({message: "Account has been verified"})
+            } else {
+                res.status(400).send({error: "Update account failed"})
+            }
         } catch (error) {
             next(error)
         }
