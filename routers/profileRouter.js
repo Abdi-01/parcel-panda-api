@@ -1,10 +1,13 @@
 const router = require('express').Router()
 const { profileController } = require('../controllers')
+const { readToken } = require('../config')
 
-router.get('/', profileController.getProfile)
-router.patch('/update-data', profileController.updateProfile)
-router.post('/add-address', profileController.addAddress)
-router.patch('/update-address', profileController.updateAddress)
-router.post('/update-photo', profileController.updatePhoto)
+router.get('/', readToken, profileController.getProfile)
+router.patch('/update-data', readToken, profileController.updateProfile)
+router.post('/add-address', readToken, profileController.addAddress)
+router.patch('/update-address', readToken, profileController.updateAddress)
+router.delete('/delete-address/:id', readToken, profileController.deleteAddress)
+router.patch('/update-password', readToken, profileController.updatePassword)
+router.patch('/update-photo', readToken, profileController.updatePhoto)
 
 module.exports = router

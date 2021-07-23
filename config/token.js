@@ -8,7 +8,7 @@ module.exports = {
         })
     },
     readToken: (req, res, next) => {
-        console.log("Cek REQ TOKEN", req.token)
+        // console.log("Cek REQ TOKEN", req.token)
         jwt.verify(req.token, "parcelpanda$", (err, decoded) => {
             if (err) {
                 return res.status(401).send('User not authorization')
