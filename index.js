@@ -9,15 +9,16 @@ const path = require('path')
 dotenv.config()
 
 const { db } = require('./config/database')
+const { userRouter, profileRouter, productManageRouter } = require('./routers')
 
 app.use(cors()) // get data from front-end
 app.use(express.json()) // get json body
 app.use('/static', express.static(path.join(__dirname, 'public'))) // access static files in public folder
 app.use(bearerToken()) // read token 
-
-const { profileRouter, userRouter } = require('./routers')
 app.use('/profile', profileRouter)
 app.use('/auth', userRouter)
+app.use('/product-manage', productManageRouter)
+
 
 app.get('/', (req, res) => {
     res.send('Hello')
