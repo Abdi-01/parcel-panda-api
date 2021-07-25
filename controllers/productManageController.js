@@ -29,4 +29,25 @@ module.exports = {
             next(error)
         }
     },
+
+    deleteProduct: async (req, res, next) => {
+        try {
+            // console.log("deleteProduct")
+            let role = req.user.role 
+            if (role === 'admin') {
+                let queryUpdateProduct = `UPDATE product SET idstatus = 4 WHERE id = ${req.params.id}`
+                let response = await dbQuery(queryUpdateProduct)
+                if (response.affectedRows > 0) {
+                    res.status(200).send({message: "product has been deleted"})
+                } else {
+                    res.status(400).send({message: "delete product failed"})
+                }
+            } else {
+                res.status(400).send({message: "Must be admin"})
+            }
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
+    },
 }
