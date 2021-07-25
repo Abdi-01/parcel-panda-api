@@ -102,6 +102,7 @@ module.exports = {
             next(error)
         }
     },
+
     keepLogin: async (req, res, next) => {
         try {
             if (req.user.id) {
@@ -116,6 +117,7 @@ module.exports = {
             next(error)
         }
     },
+
     forgetPass: async (req, res, next) => {
         try {
             let getEmail = `Select * from user where email = ${db.escape(req.body.email)}`
@@ -163,6 +165,7 @@ module.exports = {
             next(error)
         }
     },
+    
     reverif: async (req, res, next) => {
         try {
             // GENERATE OTP
