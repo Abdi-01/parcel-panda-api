@@ -9,7 +9,7 @@ const path = require('path')
 dotenv.config()
 
 const { db } = require('./config/database')
-const { userRouter, profileRouter, productManageRouter } = require('./routers')
+const { userRouter, profileRouter, productManageRouter, transactionManageRouter } = require('./routers')
 
 app.use(cors()) // get data from front-end
 app.use(express.json()) // get json body
@@ -18,6 +18,7 @@ app.use(bearerToken()) // read token
 app.use('/profile', profileRouter)
 app.use('/auth', userRouter)
 app.use('/product-manage', productManageRouter)
+app.use('/transaction-manage', transactionManageRouter)
 
 
 app.get('/', (req, res) => {
