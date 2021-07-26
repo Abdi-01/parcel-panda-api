@@ -7,5 +7,6 @@ router.get('/read/:limit/:offset', readToken, productManageController.getManageP
 router.get('/get-parcel', productManageController.getParcel)
 router.get('/getParcel-type', productManageController.getParcelType)
 router.get('/filter-product', productManageController.filterProductCategory)
+router.get('/product-detail', productManageController.getProductDetail)
 
 module.exports = router
