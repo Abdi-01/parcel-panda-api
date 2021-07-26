@@ -13,6 +13,7 @@ const { userRouter, profileRouter, productManageRouter } = require('./routers')
 
 app.use(cors()) // get data from front-end
 app.use(express.json()) // get json body
+// app.use(express.static("public"));
 app.use('/static', express.static(path.join(__dirname, 'public'))) // access static files in public folder
 app.use(bearerToken()) // read token 
 app.use('/profile', profileRouter)
