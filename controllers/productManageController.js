@@ -30,6 +30,25 @@ module.exports = {
         }
     },
 
+    filterProductCategory: async (req, res, next) => {
+        try {
+            let dataSearch = [], getSQL
+            for (let prop in req.query) {
+                dataSearch.push(`${db.escape(req.query[prop])}`)
+            }
+            console.log(dataSearch.join(' AND '))
+            if (dataSearch.length > 0) {
+                getSQL = `Select p.*, c.title as category from product p join category c on p.idcategory = c.id where idcategory in (${dataSearch.join(' , ')});`
+            } else {
+                getSQL = `Select  p.*, c.title as category from product p join category c on p.idcategory = c.id;`
+            }
+            let get = await dbQuery(getSQL)
+            res.status(200).send(get)
+        } catch (error) {
+            next(error)
+        }
+    },
+
     getParcel: async (req, res, next) => {
         try {
             let get = `Select * from parcel_type`
