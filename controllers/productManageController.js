@@ -105,7 +105,7 @@ module.exports = {
                     let querySelectImage = `SELECT url FROM product WHERE id = ${db.escape(data.id)}`
                     let imgResponse = await dbQuery(querySelectImage)
                     // console.log(imgResponse)
-                    if (imgResponse[0].url !== null) {
+                    if (imgResponse[0].url !== null && fs.existsSync(`./public/images/${imgResponse[0].url}`)) {
                         if (imgResponse[0].url.length > 0) {
                             fs.unlinkSync(`./public/images/${imgResponse[0].url}`)
                         }
