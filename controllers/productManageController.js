@@ -11,7 +11,6 @@ module.exports = {
             next(error)
         }
     },
-
     getManageProduct: async (req, res, next) => {
         try {
             // console.log("getManageProduct", req.user)
@@ -22,32 +21,72 @@ module.exports = {
                 let dataProduct = await dbQuery(queryReadProduct)
                 res.status(200).send(dataProduct)
             } else {
-                res.status(400).send({message: "Must be admin"})
+                res.status(400).send({ message: "Must be admin" })
             }
         } catch (error) {
             console.log(error)
             next(error)
         }
     },
-
     deleteProduct: async (req, res, next) => {
         try {
             // console.log("deleteProduct")
-            let role = req.user.role 
+            let role = req.user.role
             if (role === 'admin') {
                 let queryUpdateProduct = `UPDATE product SET idstatus = 4 WHERE id = ${req.params.id}`
                 let response = await dbQuery(queryUpdateProduct)
                 if (response.affectedRows > 0) {
-                    res.status(200).send({message: "product has been deleted"})
+                    res.status(200).send({ message: "product has been deleted" })
                 } else {
-                    res.status(400).send({message: "delete product failed"})
+                    res.status(400).send({ message: "delete product failed" })
                 }
             } else {
-                res.status(400).send({message: "Must be admin"})
+                res.status(400).send({ message: "Must be admin" })
             }
         } catch (error) {
             console.log(error)
             next(error)
         }
     },
+    getParcel: async (req, res, next) => {
+        try {
+            let get = `Select * from parcel_type`
+            let getParcelCategory = `Select * from parcel_type_category_qty`
+            get = await dbQuery(get)
+            getParcelCategory = await dbQuery(getParcelCategory)
+            get.forEach(item => {
+                item.detail = []
+                item.category = []
+                getParcelCategory.forEach(el => {
+                    if (item.id === el.idparcel_type) {
+                        item.detail.push(el)
+                        item.category.push(`idcategory=${el.idcategory}`)
+                    }
+                })
+            })
+            res.status(200).send(get)
+        } catch (error) {
+            next(error)
+        }
+    },
+
+    getParcelType: async (req, res, next) => {
+        try {
+            let getSQL, dataSearch = []
+            for (let prop in req.query) {
+                dataSearch.push(`${prop} = ${db.escape(req.query[prop])}`)
+            }
+            console.log(dataSearch.join(' AND '))
+            if (dataSearch.length > 0) {
+                getSQL = `Select pt.*, p.price from parcel_type_category_qty pt join parcel_type p on p.id = pt.idparcel_type where ${dataSearch.join(' AND ')};`
+            } else {
+                getSQL = `Select pt.*, p.price from parcel_type_category_qty pt join parcel_type p on p.id = pt.idparcel_type;`
+            }
+            let get = await dbQuery(getSQL)
+            res.status(200).send(get)
+        } catch (error) {
+            next(error)
+        }
+    }
+
 }
