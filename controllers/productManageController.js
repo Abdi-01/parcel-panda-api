@@ -19,9 +19,11 @@ module.exports = {
             let role = req.user.role
             // console.log(req.query)
             if (role === 'admin') {
+                let countRows = `SELECT COUNT(*) as count FROM product`
                 let queryReadProduct = `SELECT product.id, name, idcategory, category.title as category, idstatus, status.title as status, stock, price, url FROM product JOIN category ON product.idcategory = category.id JOIN status ON product.idstatus = status.id WHERE idstatus = 3 ORDER BY ${req.query.column} ${req.query.sort} LIMIT ${req.params.limit} OFFSET ${req.params.offset}`
+                let totalProducts = await dbQuery(countRows)
                 let dataProduct = await dbQuery(queryReadProduct)
-                res.status(200).send(dataProduct)
+                res.status(200).send({count: totalProducts[0].count, values: dataProduct})
             } else {
                 res.status(400).send({ message: "Must be admin" })
             }
