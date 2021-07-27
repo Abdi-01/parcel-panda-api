@@ -75,11 +75,11 @@ module.exports = {
         try {
             let getSQL, dataSearch = []
             for (let prop in req.query) {
-                dataSearch.push(`${prop} = ${db.escape(req.query[prop])}`)
+                dataSearch.push(`${db.escape(req.query[prop])}`)
             }
             console.log(dataSearch.join(' AND '))
             if (dataSearch.length > 0) {
-                getSQL = `Select pt.*, p.price from parcel_type_category_qty pt join parcel_type p on p.id = pt.idparcel_type where ${dataSearch.join(' AND ')};`
+                getSQL = `Select pt.*, p.price from parcel_type_category_qty pt join parcel_type p on p.id = pt.idparcel_type where idparcel_type in (${dataSearch});`
             } else {
                 getSQL = `Select pt.*, p.price from parcel_type_category_qty pt join parcel_type p on p.id = pt.idparcel_type;`
             }
