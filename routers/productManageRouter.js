@@ -7,5 +7,8 @@ router.delete('/delete/:id', readToken, productManageController.deleteProduct)
 router.get('/get-parcel', productManageController.getParcel)
 router.get('/getParcel-type', productManageController.getParcelType)
 router.patch('/edit-product', readToken, productManageController.editManageProduct)
+router.get('/filter-product', productManageController.filterProductCategory)
+router.get('/product-detail', productManageController.getProductDetail)
+router.patch('/manage-stock/:id', productManageController.manageStock)
 
 module.exports = router
