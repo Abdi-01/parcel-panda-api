@@ -12,7 +12,7 @@ module.exports = {
                 let queryReadProduct = `SELECT product.id, name, idcategory, category.title as category, idstatus, status.title as status, stock, price, url FROM product JOIN category ON product.idcategory = category.id JOIN status ON product.idstatus = status.id WHERE idstatus = 3 ORDER BY ${req.query.column} ${req.query.sort} LIMIT ${req.params.limit} OFFSET ${req.params.offset}`
                 let totalProducts = await dbQuery(countRows)
                 let dataProduct = await dbQuery(queryReadProduct)
-                res.status(200).send({count: totalProducts[0].count, values: dataProduct})
+                res.status(200).send({ count: totalProducts[0].count, values: dataProduct })
             } else {
                 res.status(400).send({ message: "Must be admin" })
             }
@@ -43,6 +43,25 @@ module.exports = {
         }
     },
 
+    filterProductCategory: async (req, res, next) => {
+        try {
+            let dataSearch = [], getSQL
+            for (let prop in req.query) {
+                dataSearch.push(`${db.escape(req.query[prop])}`)
+            }
+            console.log(dataSearch.join(' AND '))
+            if (dataSearch.length > 0) {
+                getSQL = `Select p.*, c.title as category from product p join category c on p.idcategory = c.id where idcategory in (${dataSearch.join(' , ')});`
+            } else {
+                getSQL = `Select  p.*, c.title as category from product p join category c on p.idcategory = c.id;`
+            }
+            let get = await dbQuery(getSQL)
+            res.status(200).send(get)
+        } catch (error) {
+            next(error)
+        }
+    },
+
     getParcel: async (req, res, next) => {
         try {
             let get = `Select * from parcel_type`
@@ -69,11 +88,11 @@ module.exports = {
         try {
             let getSQL, dataSearch = []
             for (let prop in req.query) {
-                dataSearch.push(`${prop} = ${db.escape(req.query[prop])}`)
+                dataSearch.push(`${db.escape(req.query[prop])}`)
             }
             console.log(dataSearch.join(' AND '))
             if (dataSearch.length > 0) {
-                getSQL = `Select pt.*, p.price from parcel_type_category_qty pt join parcel_type p on p.id = pt.idparcel_type where ${dataSearch.join(' AND ')};`
+                getSQL = `Select pt.*, p.price from parcel_type_category_qty pt join parcel_type p on p.id = pt.idparcel_type where idparcel_type in (${dataSearch});`
             } else {
                 getSQL = `Select pt.*, p.price from parcel_type_category_qty pt join parcel_type p on p.id = pt.idparcel_type;`
             }
@@ -109,12 +128,12 @@ module.exports = {
                     let queryUpdateProduct = `UPDATE product SET name=${db.escape(data.name)}, idcategory=${db.escape(data.idcategory)}, stock=${db.escape(data.stock)}, price=${db.escape(data.price)}${urlQuery} WHERE id=${db.escape(data.id)}`
                     let response = await dbQuery(queryUpdateProduct)
                     if (response.affectedRows > 0) {
-                        res.status(200).send({message: "product has been updated"})
+                        res.status(200).send({ message: "product has been updated" })
                     } else {
-                        res.status(400).send({message: "update product failed"})
+                        res.status(400).send({ message: "update product failed" })
                     }
                 } else {
-                    res.status(400).send({message: "Must be admin"})
+                    res.status(400).send({ message: "Must be admin" })
                 }
             } catch (error) {
                 // console.log("images catch", req.files.images)
@@ -125,5 +144,36 @@ module.exports = {
                 next(error)
             }
         })
+    },
+    getProductDetail: async (req, res, next) => {
+        try {
+            let dataSearch = [], getSQL
+            for (let prop in req.query) {
+                dataSearch.push(`${prop} = ${db.escape(req.query[prop])}`)
+            }
+            console.log(dataSearch.join(' AND '))
+            if (dataSearch.length > 0) {
+                getSQL = `Select p.*, c.title as category from product p join category c on p.idcategory = c.id where ${dataSearch.join(' AND ')};`
+            } else {
+                getSQL = `Select  p.*, c.title as category from product p join category c on p.idcategory = c.id;`
+            }
+            let get = await dbQuery(getSQL)
+            res.status(200).send(get)
+        } catch (error) {
+            next(error)
+        }
+    },
+    manageStock: async (req, res, next) => {
+        try {
+            let queryUpdate = `Update product set stock = ${req.body.stock} where id = ${req.params.id};`
+            queryUpdate = await dbQuery(queryUpdate)
+            if (queryUpdate.affectedRows > 0) {
+                res.status(200).send({ message: "product has been updated" })
+            } else {
+                res.status(400).send({ message: "update product failed" })
+            }
+        } catch (error) {
+            next(error)
+        }
     }
 }
