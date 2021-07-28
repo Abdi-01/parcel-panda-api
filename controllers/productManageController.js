@@ -107,6 +107,20 @@ module.exports = {
         } catch (error) {
             next(error)
         }
+    },
+
+    manageStock: async (req, res, next) => {
+        try {
+            let queryUpdate = `Update product set stock = ${req.body.stock} where id = ${req.params.id};`
+            queryUpdate = await dbQuery(queryUpdate)
+            if (queryUpdate.affectedRows > 0) {
+                res.status(200).send({message: "product has been updated"})
+            } else {
+                res.status(400).send({message: "update product failed"})
+            }
+        } catch (error) {
+            next(error)
+        }
     }
     
 }

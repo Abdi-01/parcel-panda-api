@@ -9,7 +9,7 @@ const path = require('path')
 dotenv.config()
 
 const { db } = require('./config/database')
-const { userRouter, profileRouter, productManageRouter, transactionRouter } = require('./routers')
+const { userRouter, profileRouter, productManageRouter, transactionRouter, ongkirRouter } = require('./routers')
 
 app.use(cors()) // get data from front-end
 app.use(express.json()) // get json body
@@ -19,6 +19,7 @@ app.use('/profile', profileRouter)
 app.use('/auth', userRouter)
 app.use('/product-manage', productManageRouter)
 app.use('/transaction', transactionRouter)
+app.use('/ongkir', ongkirRouter)
 
 
 app.get('/', (req, res) => {
