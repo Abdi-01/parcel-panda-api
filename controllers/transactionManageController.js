@@ -7,20 +7,22 @@ module.exports = {
             // http://localhost:8031/transaction-manage/5/0?payment=ongoing,accepted
             if (role === 'admin') {
                 let paymentString = []
-                let queryPaymentStatus = ''
-                let joinStatus = ''
+                let joinQuery = ''
                 if (req.query.payment) {
                     req.query.payment.split(",").forEach(element => {
                         paymentString.push(db.escape(element))
                     });
-                    queryPaymentStatus = `payment_status.title IN (${paymentString})`
                 }
-                if (req.query.payment) {
-                    joinStatus = `WHERE ${queryPaymentStatus}`
+                if (req.query.payment && req.query.from && req.query.to) {
+                    joinQuery = `WHERE payment_status.title IN (${paymentString}) AND date_transaction BETWEEN ${db.escape(req.query.from)} AND ${db.escape(req.query.to)}`
+                } else if (req.query.from && req.query.to) {
+                    joinQuery = `WHERE date_transaction BETWEEN ${db.escape(req.query.from)} AND ${db.escape(req.query.to)}`
+                } else if (req.query.payment) {
+                    joinQuery = `WHERE payment_status.title IN (${paymentString})`
                 }
-                // console.log(joinStatus)
-                let countRows = `SELECT COUNT(*) as count FROM transaction JOIN payment_status ON transaction.idpayment_status = payment_status.id ${joinStatus}`
-                let queryReadTransaction = `SELECT transaction.id, invoice, date_transaction, date_payment, username, payment_status.title as payment_status, amount, subtotal_parcel, idpayment_status, url_payment_image FROM transaction JOIN user ON transaction.iduser = user.id JOIN payment_status ON transaction.idpayment_status = payment_status.id ${joinStatus} LIMIT ${req.params.limit} OFFSET ${req.params.offset}`
+                let countRows = `SELECT COUNT(*) as count FROM transaction JOIN payment_status ON transaction.idpayment_status = payment_status.id ${joinQuery}`
+                let queryReadTransaction = `SELECT transaction.id, invoice, date_transaction, date_payment, username, payment_status.title as payment_status, amount, subtotal_parcel, idpayment_status, url_payment_image FROM transaction JOIN user ON transaction.iduser = user.id JOIN payment_status ON transaction.idpayment_status = payment_status.id ${joinQuery} LIMIT ${req.params.limit} OFFSET ${req.params.offset}`
+                // console.log(queryReadTransaction)
                 let totalTransaction = await dbQuery(countRows)
                 let dataTransaction = await dbQuery(queryReadTransaction)
                 res.status(200).send({count: totalTransaction[0].count, values: dataTransaction})
