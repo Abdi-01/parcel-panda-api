@@ -2,25 +2,17 @@ const { db, dbQuery, uploader } = require('../config')
 const fs = require('fs')
 
 module.exports = {
-    getProduct: async (req, res, next) => {
-        try {
-            let queryReadProduct = `SELECT product.id, name, idcategory, category.title as category, idstatus, status.title as status, stock, price, url FROM product JOIN category ON product.idcategory = category.id JOIN status ON product.idstatus = status.id WHERE idstatus = 3`
-            let dataProduct = await dbQuery(queryReadProduct)
-            res.status(200).send(dataProduct)
-        } catch (error) {
-            console.log(error)
-            next(error)
-        }
-    },
     getManageProduct: async (req, res, next) => {
         try {
             // console.log("getManageProduct", req.user)
             let role = req.user.role
             // console.log(req.query)
             if (role === 'admin') {
+                let countRows = `SELECT COUNT(*) as count FROM product`
                 let queryReadProduct = `SELECT product.id, name, idcategory, category.title as category, idstatus, status.title as status, stock, price, url FROM product JOIN category ON product.idcategory = category.id JOIN status ON product.idstatus = status.id WHERE idstatus = 3 ORDER BY ${req.query.column} ${req.query.sort} LIMIT ${req.params.limit} OFFSET ${req.params.offset}`
+                let totalProducts = await dbQuery(countRows)
                 let dataProduct = await dbQuery(queryReadProduct)
-                res.status(200).send(dataProduct)
+                res.status(200).send({count: totalProducts[0].count, values: dataProduct})
             } else {
                 res.status(400).send({ message: "Must be admin" })
             }
@@ -29,6 +21,7 @@ module.exports = {
             next(error)
         }
     },
+
     deleteProduct: async (req, res, next) => {
         try {
             // console.log("deleteProduct")
@@ -49,6 +42,7 @@ module.exports = {
             next(error)
         }
     },
+
     getParcel: async (req, res, next) => {
         try {
             let get = `Select * from parcel_type`
@@ -70,6 +64,7 @@ module.exports = {
             next(error)
         }
     },
+
     getParcelType: async (req, res, next) => {
         try {
             let getSQL, dataSearch = []
@@ -88,6 +83,7 @@ module.exports = {
             next(error)
         }
     },
+
     editManageProduct: async (req, res, next) => {
         const upload = uploader('/images', 'IMG').fields([{ name: 'images' }])
         upload(req, res, async (error) => {
@@ -100,12 +96,17 @@ module.exports = {
                     let querySelectImage = `SELECT url FROM product WHERE id = ${db.escape(data.id)}`
                     let imgResponse = await dbQuery(querySelectImage)
                     // console.log(imgResponse)
-                    if (imgResponse[0].url !== null) {
+                    if (imgResponse[0].url !== null && fs.existsSync(`./public/images/${imgResponse[0].url}`)) {
                         if (imgResponse[0].url.length > 0) {
                             fs.unlinkSync(`./public/images/${imgResponse[0].url}`)
                         }
                     }
-                    let queryUpdateProduct = `UPDATE product SET name=${db.escape(data.name)}, idcategory=${db.escape(data.idcategory)}, stock=${db.escape(data.stock)}, price=${db.escape(data.price)}, url=${db.escape(req.files.images[0].filename)} WHERE id=${db.escape(data.id)}`
+                    // console.log("images try", req.files.images)
+                    let urlQuery = ''
+                    if (req.files.images !== undefined) {
+                        urlQuery = `, url=${db.escape(req.files.images[0].filename)}`
+                    }
+                    let queryUpdateProduct = `UPDATE product SET name=${db.escape(data.name)}, idcategory=${db.escape(data.idcategory)}, stock=${db.escape(data.stock)}, price=${db.escape(data.price)}${urlQuery} WHERE id=${db.escape(data.id)}`
                     let response = await dbQuery(queryUpdateProduct)
                     if (response.affectedRows > 0) {
                         res.status(200).send({message: "product has been updated"})
@@ -116,7 +117,10 @@ module.exports = {
                     res.status(400).send({message: "Must be admin"})
                 }
             } catch (error) {
-                fs.unlinkSync(`./public/images/${request.files.images[0].filename}`)
+                // console.log("images catch", req.files.images)
+                if (req.files.images !== undefined) {
+                    fs.unlinkSync(`./public/images/${req.files.images[0].filename}`)
+                }
                 console.log(error)
                 next(error)
             }
