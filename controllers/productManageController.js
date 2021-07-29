@@ -175,5 +175,15 @@ module.exports = {
         } catch (error) {
             next(error)
         }
+    },
+
+    getProduct: async (req, res, next) => {
+        try {
+            let queryGet = `Select p.*, c.title as category from product p join category c on c.id = p.idcategory where p.idstatus = 3`
+            queryGet = await dbQuery(queryGet)
+            res.status(200).send(queryGet)
+        } catch (error) {
+            next(error)
+        }
     }
 }
