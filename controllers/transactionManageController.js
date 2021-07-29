@@ -34,23 +34,4 @@ module.exports = {
             next(error)
         }
     },
-
-    getFilterSubject: async (req, res, next) => {
-        try {
-            let role = req.user.role 
-            if (role === 'admin') {
-                let paymentStatusQuery = `SELECT title FROM payment_status`
-                let parcelTypeQuery = `SELECT title FROM parcel_type`
-                let paymentStatus = await dbQuery(paymentStatusQuery)
-                let parcelType = await dbQuery(parcelTypeQuery)
-                // console.log(paymentStatus, parcelType)
-                res.status(200).send({payment: paymentStatus, parcel: parcelType})
-            } else {
-                res.status(400).send({message: "Must be admin"})
-            }
-        } catch (error) {
-            console.log(error)
-            next(error)
-        }
-    }
 }
