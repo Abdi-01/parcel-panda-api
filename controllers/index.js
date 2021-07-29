@@ -4,6 +4,7 @@ const productManageController = require('./productManageController')
 const transactionManageController = require('./transactionManageController')
 const transactionController = require("./transactionController")
 const ongkirController = require("./ongkirController")
+const financialReportController = require("./financialReportController")
 
 module.exports = {
     userController,
@@ -11,5 +12,6 @@ module.exports = {
     productManageController,
     transactionManageController,
     transactionController,
-    ongkirController
+    ongkirController,
+    financialReportController
 }
