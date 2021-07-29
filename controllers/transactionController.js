@@ -82,5 +82,38 @@ module.exports = {
         } catch (error) {
             next(error)
         }
-    }
+    },
+
+    getTransaction: async (req, res, next) => {
+        try {
+            let queryGet = `Select t.*, u.username, a.address, a.phone_number, ps.title from transaction t join user u on u.id = t.iduser 
+            join address a on t.idaddress = a.id join payment_status ps on t.idpayment_status=ps.id where t.iduser=${req.user.id};`
+            queryGet = await dbQuery(queryGet)
+            console.log(queryGet)
+            let queryGetDetail = `Select td.*, pt.id as parcel, p.name, p.url, c.title from transaction_detail td join parcel_type pt on pt.id=td.idparcel_type 
+            join product p on p.id = td.idproduct join category c on c.id=td.idcategory;`
+            queryGetDetail = await dbQuery(queryGetDetail)
+            queryGet.forEach(item => {
+                item.detail= []
+                queryGetDetail.forEach(el => {
+                    if(item.id === el.idtransaksi){
+                        item.detail.push(el)
+                    }
+                })
+            })
+            res.status(200).send(queryGet)
+        } catch (error) {
+            next(error)
+        }
+    },
+
+    getPaymentStatus: async (req, res, next) => {
+        try {
+            let queryGet = `SELECT * FROM payment_status`
+            queryGet = await dbQuery(queryGet)
+            res.status(200).send(queryGet)
+        } catch (error) {
+            next(error)
+        }
+    },
 }
