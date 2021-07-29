@@ -14,7 +14,7 @@ module.exports = {
                 let dataProduct = await dbQuery(queryReadProduct)
                 res.status(200).send({ count: totalProducts[0].count, values: dataProduct })
             } else {
-                res.status(400).send({ message: "Must be admin" })
+                res.status(401).send({ message: "Must be admin" })
             }
         } catch (error) {
             console.log(error)
@@ -32,10 +32,10 @@ module.exports = {
                 if (response.affectedRows > 0) {
                     res.status(200).send({ message: "product has been deleted" })
                 } else {
-                    res.status(400).send({ message: "delete product failed" })
+                    res.status(500).send({ message: "delete product failed" })
                 }
             } else {
-                res.status(400).send({ message: "Must be admin" })
+                res.status(401).send({ message: "Must be admin" })
             }
         } catch (error) {
             console.log(error)
@@ -130,10 +130,10 @@ module.exports = {
                     if (response.affectedRows > 0) {
                         res.status(200).send({ message: "product has been updated" })
                     } else {
-                        res.status(400).send({ message: "update product failed" })
+                        res.status(500).send({ message: "update product failed" })
                     }
                 } else {
-                    res.status(400).send({ message: "Must be admin" })
+                    res.status(401).send({ message: "Must be admin" })
                 }
             } catch (error) {
                 // console.log("images catch", req.files.images)
@@ -170,7 +170,7 @@ module.exports = {
             if (queryUpdate.affectedRows > 0) {
                 res.status(200).send({ message: "product has been updated" })
             } else {
-                res.status(400).send({ message: "update product failed" })
+                res.status(500).send({ message: "update product failed" })
             }
         } catch (error) {
             next(error)

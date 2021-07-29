@@ -27,11 +27,39 @@ module.exports = {
                 let dataTransaction = await dbQuery(queryReadTransaction)
                 res.status(200).send({count: totalTransaction[0].count, values: dataTransaction})
             } else {
-                res.status(400).send({message: "Must be admin"})
+                res.status(401).send({message: "Must be admin"})
             }
         } catch (error) {
             console.log(error)
             next(error)
         }
     },
+
+    transactionAction: async (req, res, next) => {
+        try {
+            let role = req.user.role 
+            let action = req.query.action
+            if (role === 'admin') {
+                let idpayment_status =  0
+                if (action === 'accept') {
+                    idpayment_status = 3
+                } else if (action === 'reject') {
+                    idpayment_status = 4
+                } else {
+                    res.status(405).send({ message: "this method not allowed" })
+                }
+                let updateTransactionStatus = `UPDATE transaction SET idpayment_status = ${idpayment_status} WHERE (id=${req.params.id})`
+                let response = await dbQuery(updateTransactionStatus)
+                if (response.affectedRows > 0) {
+                    res.status(200).send({ message: "transaction updated" })
+                } else {
+                    res.status(500).send({ message: "failed to update transaction" })
+                } 
+            } else {
+                res.status(401).send({message: "Must be admin"})
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
