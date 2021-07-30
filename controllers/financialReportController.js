@@ -5,7 +5,7 @@ module.exports = {
         try {
             let role = req.user.role 
             if (role === 'admin') {
-                let queryRevenue = `SELECT DATE(date_transaction) AS date, SUM(subtotal_parcel - subtotal_product) as val FROM transaction GROUP BY DATE(date_transaction) ORDER BY date`
+                let queryRevenue = `SELECT DATE(date_transaction) AS date, SUM(subtotal_parcel - subtotal_product) as profit, SUM(subtotal_parcel) as user_spent FROM transaction GROUP BY DATE(date_transaction) ORDER BY date`
                 let queryTotalRevenue = `SELECT SUM(subtotal_parcel - subtotal_product) as total_revenue FROM transaction`
                 let queryCurrentMonthRevenue = `SELECT SUM(subtotal_parcel - subtotal_product) as revenue FROM transaction WHERE MONTH(date_transaction)=MONTH(curdate())`
                 let queryCurrentDateRevenue = `SELECT SUM(subtotal_parcel - subtotal_product) as revenue FROM transaction WHERE DATE(date_transaction)=curdate()`
@@ -26,11 +26,11 @@ module.exports = {
         }
     },
 
-    getTotalItem: async (req, res, next) => {
+    getItemReport: async (req, res, next) => {
         try {
             let role = req.user.role 
             if (role === 'admin') {
-                let querySalesItem = `SELECT DATE(date_transaction) AS date, SUM(transaction_detail.amount) as val FROM transaction JOIN transaction_detail ON transaction.id = transaction_detail.idtransaksi GROUP BY DATE(date_transaction) ORDER BY date`
+                let querySalesItem = `SELECT DATE(date_transaction) AS date, SUM(transaction_detail.amount) as amount FROM transaction JOIN transaction_detail ON transaction.id = transaction_detail.idtransaksi GROUP BY DATE(date_transaction) ORDER BY date`
                 let queryTotalItem = `SELECT SUM(transaction_detail.amount) as total_product FROM transaction_detail`
                 let queryCurrentMonthItem = `SELECT SUM(transaction_detail.amount) as total_product FROM transaction JOIN transaction_detail ON transaction.id = transaction_detail.idtransaksi WHERE MONTH(date_transaction)=MONTH(curdate())`
                 let queryCurrentDateItem = `SELECT SUM(transaction_detail.amount) as total_product FROM transaction JOIN transaction_detail ON transaction.id = transaction_detail.idtransaksi WHERE DATE(date_transaction)=curdate()`
@@ -49,4 +49,18 @@ module.exports = {
             next(error)
         }
     },
+
+    getParcelReport: async (req, res, next) => {
+        try {
+            let role = req.user.role 
+            if (role === 'admin') {
+                
+            } else {
+                res.status(400).send({message: "Must be admin"})
+            }
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
+    }
 }
