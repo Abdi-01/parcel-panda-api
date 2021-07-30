@@ -175,5 +175,37 @@ module.exports = {
         } catch (error) {
             next(error)
         }
-    }
+    },
+
+    addProduct: async (req, res, next) => {
+        try {
+            const upload = uploader('/images', 'IMG').fields([{ name: 'images' }])
+            upload(req, res, async (error) => {
+                try {
+                    const { images } = req.files
+                    console.log("cek file upload", images)
+                    console.log(JSON.parse(req.body.data))
+                    //fugsi add product
+                    let role = req.user.role
+                    let data = JSON.parse(req.body.data)
+                    if (role === 'admin') {
+                        let addSQL = `Insert into product (name, idcategory, stock, price, url) 
+                        values (${db.escape(data.name)}, ${db.escape(data.idcategory)}, 
+                        ${db.escape(data.stock)}, ${db.escape(data.price)}, ${db.escape(req.files.images[0].filename)});`
+                        addSQL = await dbQuery(addSQL)
+                        res.status(200).send({ message: "product has been added" })
+                    } else {
+                        res.status(401).send({ message: "Must be admin" })
+                    }
+                } catch (err) {
+                    // hapus gambar
+                    fs.unlinkSync(`./public/images/${req.files.images[0].filename}`)
+                    console.log(err)
+                    next(error)
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    },
 }
