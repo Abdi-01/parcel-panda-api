@@ -10,7 +10,7 @@ module.exports = {
                 let queryCurrentMonthRevenue = `SELECT SUM(subtotal_parcel - subtotal_product) as revenue FROM transaction WHERE MONTH(date_transaction)=MONTH(curdate())`
                 let queryCurrentDateRevenue = `SELECT SUM(subtotal_parcel - subtotal_product) as revenue FROM transaction WHERE DATE(date_transaction)=curdate()`
                 let queryFilteredRevenue = `SELECT SUM(subtotal_parcel - subtotal_product) as revenue FROM transaction WHERE date_transaction BETWEEN ${db.escape(req.query.from)} AND ${db.escape(req.query.to)}`
-                let querytopParcelRevenue = `SELECT idparcel_type, (parcel_type.price - SUM(product.price)) AS parcel_profit FROM db_parcelpanda.transaction_detail JOIN parcel_type ON transaction_detail.idparcel_type = parcel_type.id JOIN product ON transaction_detail.idproduct = product.id GROUP BY idparcel_type ORDER BY parcel_profit DESC`
+                let querytopParcelRevenue = `SELECT idparcel_type AS parcel, (parcel_type.price - SUM(product.price)) AS profit FROM db_parcelpanda.transaction_detail JOIN parcel_type ON transaction_detail.idparcel_type = parcel_type.id JOIN product ON transaction_detail.idproduct = product.id GROUP BY idparcel_type ORDER BY profit DESC`
                 let total = await dbQuery(queryTotalRevenue)
                 let month = await dbQuery(queryCurrentMonthRevenue)
                 let day = await dbQuery(queryCurrentDateRevenue)
