@@ -43,66 +43,6 @@ module.exports = {
         }
     },
 
-    filterProductCategory: async (req, res, next) => {
-        try {
-            let dataSearch = [], getSQL
-            for (let prop in req.query) {
-                dataSearch.push(`${db.escape(req.query[prop])}`)
-            }
-            console.log(dataSearch.join(' AND '))
-            if (dataSearch.length > 0) {
-                getSQL = `Select p.*, c.title as category from product p join category c on p.idcategory = c.id where idcategory in (${dataSearch.join(' , ')});`
-            } else {
-                getSQL = `Select  p.*, c.title as category from product p join category c on p.idcategory = c.id;`
-            }
-            let get = await dbQuery(getSQL)
-            res.status(200).send(get)
-        } catch (error) {
-            next(error)
-        }
-    },
-
-    getParcel: async (req, res, next) => {
-        try {
-            let get = `Select * from parcel_type`
-            let getParcelCategory = `Select * from parcel_type_category_qty`
-            get = await dbQuery(get)
-            getParcelCategory = await dbQuery(getParcelCategory)
-            get.forEach(item => {
-                item.detail = []
-                item.category = []
-                getParcelCategory.forEach(el => {
-                    if (item.id === el.idparcel_type) {
-                        item.detail.push(el)
-                        item.category.push(`idcategory=${el.idcategory}`)
-                    }
-                })
-            })
-            res.status(200).send(get)
-        } catch (error) {
-            next(error)
-        }
-    },
-
-    getParcelType: async (req, res, next) => {
-        try {
-            let getSQL, dataSearch = []
-            for (let prop in req.query) {
-                dataSearch.push(`${db.escape(req.query[prop])}`)
-            }
-            console.log(dataSearch.join(' AND '))
-            if (dataSearch.length > 0) {
-                getSQL = `Select pt.*, p.price from parcel_type_category_qty pt join parcel_type p on p.id = pt.idparcel_type where idparcel_type in (${dataSearch});`
-            } else {
-                getSQL = `Select pt.*, p.price from parcel_type_category_qty pt join parcel_type p on p.id = pt.idparcel_type;`
-            }
-            let get = await dbQuery(getSQL)
-            res.status(200).send(get)
-        } catch (error) {
-            next(error)
-        }
-    },
-
     editManageProduct: async (req, res, next) => {
         const upload = uploader('/images', 'IMG').fields([{ name: 'images' }])
         upload(req, res, async (error) => {
@@ -144,37 +84,6 @@ module.exports = {
                 next(error)
             }
         })
-    },
-    getProductDetail: async (req, res, next) => {
-        try {
-            let dataSearch = [], getSQL
-            for (let prop in req.query) {
-                dataSearch.push(`${prop} = ${db.escape(req.query[prop])}`)
-            }
-            console.log(dataSearch.join(' AND '))
-            if (dataSearch.length > 0) {
-                getSQL = `Select p.*, c.title as category from product p join category c on p.idcategory = c.id where ${dataSearch.join(' AND ')};`
-            } else {
-                getSQL = `Select  p.*, c.title as category from product p join category c on p.idcategory = c.id;`
-            }
-            let get = await dbQuery(getSQL)
-            res.status(200).send(get)
-        } catch (error) {
-            next(error)
-        }
-    },
-    manageStock: async (req, res, next) => {
-        try {
-            let queryUpdate = `Update product set stock = ${req.body.stock} where id = ${req.params.id};`
-            queryUpdate = await dbQuery(queryUpdate)
-            if (queryUpdate.affectedRows > 0) {
-                res.status(200).send({ message: "product has been updated" })
-            } else {
-                res.status(500).send({ message: "update product failed" })
-            }
-        } catch (error) {
-            next(error)
-        }
     },
 
     addProduct: async (req, res, next) => {
