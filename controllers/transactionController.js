@@ -121,18 +121,6 @@ module.exports = {
         try {
             getSQL = `Select t.*, u.username, a.address, a.phone_number, ps.title from transaction t join user u on u.id = t.iduser 
                 join address a on t.idaddress = a.id join payment_status ps on t.idpayment_status=ps.id where t.iduser=${req.user.id} and t.idpayment_status=${req.body.idpayment_status};`
-            // let dataSearch = [], getSQL
-            // for (let prop in req.query) {
-            //     dataSearch.push(`${db.escape(req.query[prop])}`)
-            // }
-            // console.log(dataSearch.join(' AND '))
-            // if (dataSearch.length > 0) {
-            //     getSQL = `Select t.*, u.username, a.address, a.phone_number, ps.title from transaction t join user u on u.id = t.iduser 
-            //     join address a on t.idaddress = a.id join payment_status ps on t.idpayment_status=ps.id where t.iduser=${req.user.id} and t.idpayment_status=${req.params.idpayment_status};`
-            // } else {
-            //     getSQL = `Select t.*, u.username, a.address, a.phone_number, ps.title from transaction t join user u on u.id = t.iduser 
-            //     join address a on t.idaddress = a.id join payment_status ps on t.idpayment_status=ps.id where t.iduser=${req.user.id};`
-            // }
             let queryGetDetail = `Select td.*, pt.id as parcel, p.name, p.url, c.title from transaction_detail td join parcel_type pt on pt.id=td.idparcel_type 
             join product p on p.id = td.idproduct join category c on c.id=td.idcategory;`
             getSQL = await dbQuery(getSQL)
@@ -146,6 +134,22 @@ module.exports = {
                 })
             })
             res.status(200).send(getSQL)
+        } catch (error) {
+            next(error)
+        }
+    },
+
+    getAddress: async (req, res, next) => {
+        try {
+            let id = req.user.id
+            if(id){
+                let queryProfile = `SELECT id, username, fullname, gender, email, age, role, idstatus, url_photo FROM user WHERE user.id = ${id};`
+                let queryAddress = `Select a.id, a.label, a.recipient_name, a.phone_number, a.city, c.idcity, a.postal_code, a.address FROM address a join city c on a.city = c.city where iduser = ${id}`
+                let dataProfile = await dbQuery(queryProfile)
+                let dataAddress = await dbQuery(queryAddress)
+                dataProfile[0].address = dataAddress
+                res.status(200).send(dataAddress)
+            }
         } catch (error) {
             next(error)
         }

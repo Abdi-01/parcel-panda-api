@@ -10,5 +10,6 @@ router.post('/checkout', readToken, transactionController.addTransaction)
 router.get('/', readToken, transactionController.getTransaction)
 router.get('/get-payment-status', transactionController.getPaymentStatus)
 router.patch('/filter', readToken, transactionController.filterPaymentStatus)
+router.get('/get-address', readToken, transactionController.getAddress)
 
 module.exports = router

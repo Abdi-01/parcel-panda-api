@@ -5,6 +5,8 @@ const transactionManageRouter = require('./transactionManageRouter')
 const transactionRouter = require("./transactionRouter")
 const ongkirRouter = require("./ongkirRouter")
 const financialReportRouter = require("./financialReportRouter")
+const productRouter = require("./productRouter")
+const parcelRouter = require("./parcelRouter")
 
 module.exports = {
     userRouter,
@@ -13,5 +15,7 @@ module.exports = {
     transactionManageRouter,
     transactionRouter,
     ongkirRouter,
-    financialReportRouter
+    financialReportRouter,
+    productRouter,
+    parcelRouter
 }
