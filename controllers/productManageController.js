@@ -62,6 +62,34 @@ module.exports = {
         }
     },
 
+    filterParcelCategory: async (req, res, next) => {
+        try {
+            let dataSearch = [], getDetail
+            for (let prop in req.query) {
+                dataSearch.push(`${db.escape(req.query[prop])}`)
+            }
+            console.log(dataSearch.join(' AND '))
+            let get = `Select * from parcel_type;`
+            getDetail = `Select * from parcel_type_category_qty where idcategory in (${dataSearch.join(' , ')});`
+            get = await dbQuery(get)
+            getDetail = await dbQuery(getDetail)
+            get.forEach(item => {
+                item.detail = []
+                item.category = []
+                getDetail.forEach(el => {
+                    if (item.id === el.idparcel_type) {
+                        item.detail.push(el)
+                        item.category.push(`idcategory=${el.idcategory}`)
+                    }
+                })
+            })
+            let filter = get.filter(el => el.detail.length !== 0)
+            res.status(200).send(filter)
+        } catch (error) {
+            next(error)
+        }
+    },
+
     getParcel: async (req, res, next) => {
         try {
             let get = `Select * from parcel_type`
@@ -170,7 +198,7 @@ module.exports = {
             if (queryUpdate.affectedRows > 0) {
                 res.status(200).send({ message: "product has been updated" })
             } else {
-                res.status(500).send({ message: "update product failed" })
+                res.status(400).send({ message: "update product failed" })
             }
         } catch (error) {
             next(error)

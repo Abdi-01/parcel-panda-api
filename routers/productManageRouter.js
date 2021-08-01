@@ -11,5 +11,6 @@ router.get('/filter-product', productManageController.filterProductCategory)
 router.get('/product-detail', productManageController.getProductDetail)
 router.patch('/manage-stock/:id', productManageController.manageStock)
 router.post('/add-product', readToken, productManageController.addProduct)
+router.get(`/filter-parcel`, productManageController.filterParcelCategory)
 
 module.exports = router
