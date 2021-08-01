@@ -7,5 +7,8 @@ router.post('/addParcel', readToken, transactionController.addToParcel)
 router.get('/getcart', readToken, transactionController.getCart)
 router.get('/getcart-detail', readToken, transactionController.getCartDetail)
 router.post('/checkout', readToken, transactionController.addTransaction)
+router.get('/', readToken, transactionController.getTransaction)
+router.get('/get-payment-status', transactionController.getPaymentStatus)
+router.patch('/filter', readToken, transactionController.filterPaymentStatus)
 
 module.exports = router

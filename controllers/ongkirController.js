@@ -11,9 +11,6 @@ module.exports = {
                 result.rajaongkir.results.map((item) => {
                     city.push({ idcity: item.city_id, city: item.city_name });
                 });
-                let city1 = city.slice(0, 250)
-                let city2 = city.slice(250, 502)
-                console.log(city.length, city1.length, city2.length);
                 res.status(200).send(city);
             })
             .catch(function (error) {
@@ -28,9 +25,6 @@ module.exports = {
                     result.rajaongkir.results.map((item) => {
                         city.push({ idcity: item.city_id, city: item.city_name });
                     });
-                    let city1 = city.slice(0, 250)
-                    let city2 = city.slice(250, 502)
-                    console.log(city.length, city1.length, city2.length);
                     city.forEach((item) => {
                         return dbQuery(
                             `Insert into city (idcity, city) values (${db.escape(
