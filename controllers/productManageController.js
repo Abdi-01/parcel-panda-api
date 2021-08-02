@@ -85,7 +85,6 @@ module.exports = {
             }
         })
     },
-    
     addProduct: async (req, res, next) => {
         try {
             const upload = uploader('/images', 'IMG').fields([{ name: 'images' }])
