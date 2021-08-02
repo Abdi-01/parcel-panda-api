@@ -11,5 +11,6 @@ router.get('/', readToken, transactionController.getTransaction)
 router.get('/get-payment-status', transactionController.getPaymentStatus)
 router.patch('/filter', readToken, transactionController.filterPaymentStatus)
 router.get('/get-address', readToken, transactionController.getAddress)
+router.patch('/payment', readToken, transactionController.uploadPaymentProof)
 
 module.exports = router

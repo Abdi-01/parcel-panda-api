@@ -1,4 +1,5 @@
-const { dbQuery, db } = require('../config/database')
+const { dbQuery, db, uploader } = require('../config')
+const fs = require('fs')
 
 module.exports = {
     addCart: async (req, res, next) => {
@@ -153,5 +154,35 @@ module.exports = {
         } catch (error) {
             next(error)
         }
-    }
+    },
+
+    uploadPaymentProof: async (req, res, next) => {
+        try {
+            const upload = uploader('/transaction', 'IMG').fields([{ name: 'images' }])
+            upload(req, res, async (error) => {
+                try {
+                    const { images } = req.files
+                    console.log("cek file upload", images)
+                    console.log("DATA", JSON.parse(req.body.data))
+                    //fugsi add product
+                    let iduser = req.user.id
+                    let idpayment_status = 5
+                    if (iduser) {
+                        let data = JSON.parse(req.body.data)
+                        let payment = `Update transaction set date_payment=${db.escape(data.date_payment)}, url_payment_image=${db.escape(req.files.images[0].filename)},
+                        idpayment_status=${idpayment_status} where id=${data.id};`
+                        payment = await dbQuery(payment)
+                        res.status(200).send({ message: "Thankyou, We will process your payment" })
+                    }
+                } catch (err) {
+                    // hapus gambar
+                    fs.unlinkSync(`./public/transaction/${req.files.images[0].filename}`)
+                    console.log(err)
+                    next(error)
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    },
 }
