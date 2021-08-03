@@ -7,7 +7,7 @@ module.exports = {
             // console.log("Read Profile", req.user.id)
             let auth = req.user.id
             if (auth) {
-                let queryReadProfile = `SELECT id, username, fullname, gender, email, age, role, idstatus, url_photo FROM user WHERE user.id = ${auth}`
+                let queryReadProfile = `SELECT id, username, fullname, gender, email, date_birth, role, idstatus, url_photo FROM user WHERE user.id = ${auth}`
                 let queryReadAddress = `SELECT id, label, recipient_name, phone_number, address.idcity, city.city AS city, postal_code, address FROM address JOIN city ON address.idcity = city.idcity WHERE iduser = ${auth}`
                 let dataProfile = await dbQuery(queryReadProfile)
                 let dataAddress = await dbQuery(queryReadAddress)
