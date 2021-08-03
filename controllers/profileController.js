@@ -15,7 +15,7 @@ module.exports = {
                 // console.log(dataProfile[0])
                 res.status(200).send(dataProfile)
             } else {
-                res.status(400).send('must login!')
+                res.status(500).send('must login!')
             }
         } catch (error) {
             next(error)
@@ -37,10 +37,10 @@ module.exports = {
                 if (response.affectedRows > 0) {
                     res.status(200).send({message: "profile has been updated"})
                 } else {
-                    res.status(400).send({message: "update profile failed"})
+                    res.status(500).send({message: "update profile failed"})
                 }
             } else {
-                res.status(400).send('must login!')
+                res.status(401).send('must login!')
             }
         } catch (error) {
             next(error)
@@ -58,10 +58,10 @@ module.exports = {
                 if (response.affectedRows > 0) {
                     res.status(200).send({message: "address has been added"})
                 } else {
-                    res.status(400).send({message: "adding address failed"})
+                    res.status(500).send({message: "adding address failed"})
                 }
             } else {
-                res.status(400).send('must login!')
+                res.status(401).send('must login!')
             }
         } catch (error) {
             next(error)
@@ -83,10 +83,10 @@ module.exports = {
                 if (response.affectedRows > 0) {
                     res.status(200).send({message: "address has been updated"})
                 } else {
-                    res.status(400).send({message: "update address failed"})
+                    res.status(500).send({message: "update address failed"})
                 }
             } else {
-                res.status(400).send('must login!')
+                res.status(401).send('must login!')
             }
         } catch (error) {
             next(error)
@@ -103,10 +103,10 @@ module.exports = {
                 if (response.affectedRows > 0) {
                     res.status(200).send({message: "address has been deleted"})
                 } else {
-                    res.status(400).send({message: "delete address failed"})
+                    res.status(500).send({message: "delete address failed"})
                 }
             } else {
-                res.status(400).send('must login!')
+                res.status(401).send('must login!')
             }
         } catch (error) {
             next(error)
@@ -125,10 +125,10 @@ module.exports = {
                 if (response.affectedRows > 0) {
                     res.status(200).send({message: "password has been updated"})
                 } else {
-                    res.status(400).send({message: "update password failed"})
+                    res.status(500).send({message: "update password failed"})
                 }
             } else {
-                res.status(400).send('please check your password')
+                res.status(401).send('please check your password')
             }
         } catch (error) {
             next(error)
@@ -156,7 +156,7 @@ module.exports = {
                 if (response.affectedRows > 0) {
                     res.status(200).send({message: "photo has been updated"})
                 } else {
-                    res.status(400).send({message: "update photo failed"})
+                    res.status(500).send({message: "update photo failed"})
                 }
             } catch (error) {
                 // delete image when upload process error
