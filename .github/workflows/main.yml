@@ -1,4 +1,4 @@
-name: CI Parcel-Panda
+name: CI Parcel-Panda API
 
 on: 
   push:
