@@ -19,6 +19,7 @@ module.exports = {
             })
             res.status(200).send(get)
         } catch (error) {
+            console.log(error)
             next(error)
         }
     },
