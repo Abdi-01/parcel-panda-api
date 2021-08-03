@@ -145,7 +145,7 @@ module.exports = {
             let id = req.user.id
             if(id){
                 let queryProfile = `SELECT id, username, fullname, gender, email, age, role, idstatus, url_photo FROM user WHERE user.id = ${id};`
-                let queryAddress = `Select a.id, a.label, a.recipient_name, a.phone_number, a.city, c.idcity, a.postal_code, a.address FROM address a join city c on a.city = c.city where iduser = ${id}`
+                let queryAddress = `Select * from address where iduser = ${id}`
                 let dataProfile = await dbQuery(queryProfile)
                 let dataAddress = await dbQuery(queryAddress)
                 dataProfile[0].address = dataAddress
