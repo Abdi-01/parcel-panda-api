@@ -140,22 +140,6 @@ module.exports = {
         }
     },
 
-    getAddress: async (req, res, next) => {
-        try {
-            let id = req.user.id
-            if(id){
-                // let queryProfile = `SELECT id, username, fullname, gender, email, age, role, idstatus, url_photo FROM user WHERE user.id = ${id};`
-                let queryAddress = `Select * from address where iduser = ${id}`
-                // let dataProfile = await dbQuery(queryProfile)
-                let dataAddress = await dbQuery(queryAddress)
-                // dataProfile[0].address = dataAddress
-                res.status(200).send(dataAddress)
-            }
-        } catch (error) {
-            next(error)
-        }
-    },
-
     uploadPaymentProof: async (req, res, next) => {
         try {
             const upload = uploader('/transaction', 'IMG').fields([{ name: 'images' }])
