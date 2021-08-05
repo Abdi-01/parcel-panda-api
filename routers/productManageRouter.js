@@ -6,7 +6,5 @@ router.get('/read/:limit/:offset', readToken, productManageController.getManageP
 router.delete('/delete/:id', readToken, productManageController.deleteProduct)
 router.patch('/edit-product', readToken, productManageController.editManageProduct)
 router.post('/add-product', readToken, productManageController.addProduct)
-router.get('/get-parcel', productManageController.getParcel)
-router.get('/getParcel-type', productManageController.getParcelType)
 
 module.exports = router
