@@ -7,8 +7,8 @@ module.exports = {
             // console.log("Read Profile", req.user.id)
             let auth = req.user.id
             if (auth) {
-                let queryReadProfile = `SELECT id, username, fullname, gender, email, age, role, idstatus, url_photo FROM user WHERE user.id = ${auth}`
-                let queryReadAddress = `SELECT id, label, recipient_name, phone_number, city, postal_code, address FROM address where iduser = ${auth}`
+                let queryReadProfile = `SELECT id, username, fullname, gender, email, date_birth, role, idstatus, url_photo FROM user WHERE user.id = ${auth}`
+                let queryReadAddress = `SELECT id, label, recipient_name, phone_number, address.idcity, city.city AS city, postal_code, address FROM address JOIN city ON address.idcity = city.idcity WHERE iduser = ${auth}`
                 let dataProfile = await dbQuery(queryReadProfile)
                 let dataAddress = await dbQuery(queryReadAddress)
                 dataProfile[0].address = dataAddress
@@ -18,6 +18,7 @@ module.exports = {
                 res.status(500).send('must login!')
             }
         } catch (error) {
+            console.log(error)
             next(error)
         }
     },
@@ -53,7 +54,7 @@ module.exports = {
             let auth = req.user.id
             // let auth = 2
             if (auth) {
-                let queryInsertAddress = `INSERT INTO address (iduser, label, recipient_name, phone_number, city, postal_code, address) VALUES (${auth}, ${db.escape(req.body.label)}, ${db.escape(req.body.recipient_name)}, ${db.escape(req.body.phone_number)}, ${db.escape(req.body.city)}, ${db.escape(req.body.postal_code)}, ${db.escape(req.body.address)})`
+                let queryInsertAddress = `INSERT INTO address (iduser, label, recipient_name, phone_number, idcity, postal_code, address) VALUES (${auth}, ${db.escape(req.body.label)}, ${db.escape(req.body.recipient_name)}, ${db.escape(req.body.phone_number)}, ${db.escape(req.body.idcity)}, ${db.escape(req.body.postal_code)}, ${db.escape(req.body.address)})`
                 let response = await dbQuery(queryInsertAddress)
                 if (response.affectedRows > 0) {
                     res.status(200).send({message: "address has been added"})
@@ -168,4 +169,20 @@ module.exports = {
             }
         })
     },
+
+    getListCity: async (req, res, next) => {
+        try {
+            let auth = req.user.id
+            if (auth) {
+                let queryReadCity = `SELECT * FROM city`
+                let dataCity = await dbQuery(queryReadCity)
+                res.status(200).send(dataCity)
+            } else {
+                res.status(500).send('must login!')
+            }
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
+    }
 }
