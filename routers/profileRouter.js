@@ -9,5 +9,6 @@ router.patch('/update-address', readToken, profileController.updateAddress)
 router.delete('/delete-address/:id', readToken, profileController.deleteAddress)
 router.patch('/update-password', readToken, profileController.updatePassword)
 router.patch('/update-photo', readToken, profileController.updatePhoto)
+router.get('/city', readToken, profileController.getListCity)
 
 module.exports = router

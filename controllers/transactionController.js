@@ -1,4 +1,5 @@
-const { dbQuery, db } = require('../config/database')
+const { dbQuery, db, uploader } = require('../config')
+const fs = require('fs')
 
 module.exports = {
     addCart: async (req, res, next) => {
@@ -139,16 +140,62 @@ module.exports = {
         }
     },
 
-    getAddress: async (req, res, next) => {
+    uploadPaymentProof: async (req, res, next) => {
         try {
-            let id = req.user.id
-            if(id){
-                let queryProfile = `SELECT id, username, fullname, gender, email, age, role, idstatus, url_photo FROM user WHERE user.id = ${id};`
-                let queryAddress = `Select * from address where iduser = ${id}`
-                let dataProfile = await dbQuery(queryProfile)
-                let dataAddress = await dbQuery(queryAddress)
-                dataProfile[0].address = dataAddress
-                res.status(200).send(dataAddress)
+            const upload = uploader('/transaction', 'IMG').fields([{ name: 'images' }])
+            upload(req, res, async (error) => {
+                try {
+                    const { images } = req.files
+                    console.log("cek file upload", images)
+                    console.log("DATA", JSON.parse(req.body.data))
+                    //fugsi add product
+                    let iduser = req.user.id
+                    let idpayment_status = 5
+                    if (iduser) {
+                        let data = JSON.parse(req.body.data)
+                        let payment = `Update transaction set date_payment=${db.escape(data.date_payment)}, url_payment_image=${db.escape(req.files.images[0].filename)},
+                        idpayment_status=${idpayment_status} where id=${data.id};`
+                        payment = await dbQuery(payment)
+                        res.status(200).send({ message: "Thankyou, We will process your payment" })
+                    }
+                } catch (err) {
+                    // hapus gambar
+                    fs.unlinkSync(`./public/transaction/${req.files.images[0].filename}`)
+                    console.log(err)
+                    next(error)
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    },
+
+    updateQtyCart: async (req, res, next) => {
+        try {
+            console.log("CEK", req.user.id)
+            if(req.user.id){
+                if (req.body.amount == 0) {
+                    let del = `Delete from parcel_detail where idproduct = ${req.body.idproduct} and idcart=${req.body.idcart}`
+                    del = await dbQuery(del)
+                    res.status(200).send(del)
+                } else {
+                    let updateSQL = await dbQuery(`Update parcel_detail set amount = ${req.body.amount} where idproduct = ${req.body.idproduct} and idcart=${req.body.idcart}`)
+                    res.status(200).send({ status: "Success", results: updateSQL })
+                }
+            }
+        } catch (error) {
+            next(error)
+        }
+    },
+
+    deleteCart: async (req, res, next) => {
+        try {
+            if(req.user.id){
+                let queryDelCart = `Delete from cart where idcart = ${req.body.idcart};`
+                let queryDelCartDetail = `Delete from parcel_detail where idcart = ${req.body.idcart};`
+                queryDelCart = await dbQuery(queryDelCart)
+                queryDelCartDetail = await dbQuery(queryDelCartDetail)
+                res.status(200).send({ status: "Success delete cart"})
             }
         } catch (error) {
             next(error)
