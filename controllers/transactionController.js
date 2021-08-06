@@ -29,7 +29,7 @@ module.exports = {
 
     getCart: async (req, res, next) => {
         try {
-            let getCart= `Select * from cart where iduser = ${req.user.id}`
+            let getCart= `Select c.*, pt.title as title from cart c join parcel_type pt on pt.id = c.idparcel_type where iduser = ${req.user.id}`
             let getDetail = `Select pd.*, p.name, p.price, c.title, p.url from parcel_detail pd join product p on p.id = pd.idproduct join category c on c.id = pd.idcategory;`
             getCart= await dbQuery(getCart)
             getDetail = await dbQuery(getDetail)
