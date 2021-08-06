@@ -42,6 +42,7 @@ module.exports = {
             next(error)
         }
     },
+
     editManageProduct: async (req, res, next) => {
         const upload = uploader('/images', 'IMG').fields([{ name: 'images' }])
         upload(req, res, async (error) => {
@@ -84,6 +85,7 @@ module.exports = {
             }
         })
     },
+    
     addProduct: async (req, res, next) => {
         try {
             const upload = uploader('/images', 'IMG').fields([{ name: 'images' }])
