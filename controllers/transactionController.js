@@ -179,7 +179,7 @@ module.exports = {
                     del = await dbQuery(del)
                     res.status(200).send(del)
                 } else {
-                    let updateSQL = await dbQuery(`Update parcel_detail set amount = ${req.body.amount} where idproduct = ${req.body.idproduct} and idcart=${req.body.idcart}`)
+                    let updateSQL = await dbQuery(`Update parcel_detail set amount = ${req.body.amount}, subtotal=${req.body.subtotal} where idproduct = ${req.body.idproduct} and idcart=${req.body.idcart}`)
                     res.status(200).send({ status: "Success", results: updateSQL })
                 }
             }
