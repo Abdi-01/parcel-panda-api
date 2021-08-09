@@ -25,9 +25,8 @@ module.exports = {
 
     updateProfile: async (req, res, next) => {
         try {
-            // console.log("Update Profile")
+            // console.log("Update Profile", req.body)
             let auth = req.user.id
-            // let auth = 2
             if (auth) {
                 let value = []
                 for (property in req.body) {
@@ -71,7 +70,7 @@ module.exports = {
 
     updateAddress: async (req, res, next) => {
         try {
-            // console.log("Update Address")
+            // console.log("Update Address", req.body)
             let auth = req.user.id
             // let auth = 2
             if (auth) {
@@ -119,6 +118,7 @@ module.exports = {
             let auth = req.user.id
             let querySelectPassword = `SELECT password FROM user WHERE id = ${auth}`
             let data = await dbQuery(querySelectPassword)
+            // console.log(req.body, auth)
             // console.log(data[0].password === req.body.password)
             if (auth && data[0].password === req.body.password) {
                 let queryUpdateAddress = `UPDATE user SET password = ${db.escape(req.body.confirmPassword)} WHERE id = ${auth}`
