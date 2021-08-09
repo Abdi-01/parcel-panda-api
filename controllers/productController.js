@@ -30,25 +30,6 @@ module.exports = {
         }
     },
 
-    getProductDetail: async (req, res, next) => {
-        try {
-            let dataSearch = [], getSQL
-            for (let prop in req.query) {
-                dataSearch.push(`${prop} = ${db.escape(req.query[prop])}`)
-            }
-            console.log(dataSearch.join(' AND '))
-            if (dataSearch.length > 0) {
-                getSQL = `Select p.*, c.title as category from product p join category c on p.idcategory = c.id where ${dataSearch.join(' AND ')};`
-            } else {
-                getSQL = `Select  p.*, c.title as category from product p join category c on p.idcategory = c.id;`
-            }
-            let get = await dbQuery(getSQL)
-            res.status(200).send(get)
-        } catch (error) {
-            next(error)
-        }
-    },
-
     manageStock: async (req, res, next) => {
         try {
             let queryUpdate = `Update product set stock = ${req.body.stock} where id = ${req.params.id};`
