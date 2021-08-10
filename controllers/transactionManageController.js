@@ -4,6 +4,7 @@ module.exports = {
     getTransaction: async (req, res, next) => {
         try {
             let role = req.user.role 
+            // console.log(req.query)
             // http://localhost:8031/transaction-manage/5/0?payment=ongoing,accepted
             if (role === 'admin') {
                 let paymentString = []
