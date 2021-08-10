@@ -33,7 +33,7 @@ module.exports = {
                         </div>
                         <h1>Hello, ${username}!</h1>
                         <h3 style="color: gray;">Your OTP: <b>${otp}</b></h3>
-                        <a href='http://localhost:3000/verification/${token}' style="text-decoration: none; word-break: break-all;">Verification your Email</a></div>`,
+                        <a href='http://parcel-panda.purwadhikafs3.com/verification/${token}' style="text-decoration: none; word-break: break-all;">Verification your Email</a></div>`,
                         attachments: [
                             {
                                 filename: 'logo.PNG',
@@ -147,7 +147,7 @@ module.exports = {
                     </div>
                     <h1>Hello, ${username}!</h1>
                     <h3 style="color: gray;">Your OTP: <b>${otp}</b></h3>
-                    <a href='http://localhost:3000/verification/${token}' style="text-decoration: none; word-break: break-all;">Verification your Email</a></div>`,
+                    <a href='http://parcel-panda.purwadhikafs3.com/verification/${token}' style="text-decoration: none; word-break: break-all;">Verification your Email</a></div>`,
                     attachments: [
                         {
                             filename: 'logo.PNG',
@@ -194,7 +194,7 @@ module.exports = {
                     </div>
                     <h1>Hello, ${username}!</h1>
                     <h3 style="color: gray;">Your OTP: <b>${otp}</b></h3>
-                    <a href='http://localhost:3000/verification/${token}' style="text-decoration: none; word-break: break-all;">Verification your Email</a></div>`,
+                    <a href='http://parcel-panda.purwadhikafs3.com/verification/${token}' style="text-decoration: none; word-break: break-all;">Verification your Email</a></div>`,
                     attachments: [
                         {
                             filename: 'logo.PNG',
