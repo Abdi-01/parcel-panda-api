@@ -1,5 +1,113 @@
 # ParcelPanda API Documentation
 
+## Authentication
+
+### Register
+Request:
+- Method: POST
+- Endpoint: `/auth/regis`
+- Body:
+```json
+{
+    "username": "afiafi",
+    "fullName": "Sulthana Safina",
+    "email": "ssafinatunnajah@gmail.com",
+    "password": "afi1234"
+}
+```
+Response:
+```json
+{
+    "success": true,
+    "message": "registration success!"
+}
+```
+
+### Login
+Request:
+- Method: POST
+- Endpoint: `/auth/login`
+- Body:
+```json
+{
+    "username": "afiafi",
+    "password": "afi1234"
+}
+```
+Response:
+```json
+{
+    "id": 19,
+    "username": "afiafi",
+    "fullname": null,
+    "email": "ssafinatunnajah@gmail.com",
+    "password": "afi1234",
+    "role": "user",
+    "idstatus": 1,
+    "otp": "b5hjh1",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInVzZXJuYW1lIjoiYWZpYWZpIiwiZnVsbG5hbWUiOm51bGwsImVtYWlsIjoic3NhZmluYXR1bm5hamFoQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiYWZpNDMyMSIsInJvbGUiOiJ1c2VyIiwiaWRzdGF0dXMiOjEsIm90cCI6ImI1aGpoMSIsImlhdCI6MTYyODU2Mzk2MCwiZXhwIjoxNjI4NjA3MTYwfQ.9Sw7jgi1kZU9f09K7fkHh6al37KmWBQa8QV-Wl6PMow"
+}
+```
+
+### Verify
+Request:
+- Method: PATCH
+- Endpoint: `/auth/verify`
+- Header:
+    - Authorization: Bearer Token
+- Body:
+```json
+{
+    "otp": "wvxlw7"
+}
+```
+Response:
+```json
+{
+    "message": "Account has been verified!"
+}
+```
+
+### Update Password
+Request:
+- Method: PATCH
+- Endpoint: `/auth/update-pass`
+- Body:
+```json
+{
+    "email": "ssafinatunnajah@gmail.com"
+    "password": "afi4321"
+}
+```
+Response:
+```json
+{
+    "success": true,
+    "message": "Your account has been updated!"
+}
+```
+
+### Read User
+Request:
+- Method: GET
+- Endpoint: `/auth/get`
+Response:
+```json
+{
+    "id": 19,
+    "username": "afiafi",
+    "fullname": null,
+    "gender": null,
+    "email": "ssafinatunnajah@gmail.com",
+    "date_birth": null,
+    "role": "user",
+    "password": "afi4321",
+    "idstatus": 1,
+    "otp": "b5hjh1",
+    "url_photo": null
+}
+```
+
 ## Profile
 
 ### Read profile
@@ -164,11 +272,82 @@ Response:
     }
 ]
 ```
+## Parcel and Product Page (User Side)
 
+### Read Parcel
+Request:
+- Method: GET
+- Endpoint: `/parcel/get-parcel`
+Response:
+```json 
+{
+    "id": 1,
+    "title": "5 foods",
+    "price": 500000,
+    "url": "1waCewfz3ho3sOU7fCfuzCySC3Bgrti6s",
+    "detail": [
+        {
+            "id": 1,
+            "idparcel_type": 1,
+            "idcategory": 1,
+            "max_qty": 5
+        }
+    ],
+    "category": [
+        "idcategory=1"
+    ]
+}
+```
 
+### Read Parcel Type
+Request:
+- Method: GET
+- Endpoint: `/parcel/getParcel-type`
+Response:
+```json 
+{
+        "id": 1,
+        "idparcel_type": 1,
+        "idcategory": 1,
+        "max_qty": 5,
+        "price": 500000
+    }
+```
 
+### Read Product
+Request:
+- Method: GET
+- Endpoint: `/product`
+Response:
+```json 
+{
+    "id": 1,
+    "name": "Hershey Chocolate Kisses Milk Almoond",
+    "idcategory": 1,
+    "idstatus": 3,
+    "stock": 12,
+    "price": 65000,
+    "url": "1.jpg",
+    "category": "food"
+}
+```
 
-
+### Manage Stock
+Request:
+- Method: PATCH
+- Endpoint: `/product/manage-stock/:id`
+- Body:
+```json
+{
+    "stock": 12
+}
+```
+Response:
+```json 
+{
+    "message": "product has been updated"
+}
+```
 
 ## Manage Product
 
@@ -239,6 +418,28 @@ Response:
             "url": "9.jpg"
         }
     ]
+}
+```
+
+### Add product
+Request:
+- Method: POST
+- Endpoint: `/product-manage/add-product`
+- Header:
+    - Authorization: Bearer Token
+- Body:
+```json
+{
+    "name": "Avocado Lampung",
+    "idcategory": 2,
+    "stock": "23",
+    "price": 33000
+}
+```
+Response:
+```json 
+{
+    "message": "product has been added"
 }
 ```
 
@@ -459,4 +660,294 @@ Response:
         }
     ]
 }
+```
+
+## User Transaction
+
+### Add to Cart
+Request:
+- Method: POST
+- Endpoint: `/transaction/addCart`
+- Header:
+    - Authorization: Bearer Token
+- Body:
+```json
+{
+    "idparcel_type": 1,
+    "subtotal": 500000
+}
+```
+Response:
+```json
+[
+    {
+        "idcart": 113,
+        "iduser": 19,
+        "idparcel_type": 1,
+        "idstatus": 1,
+        "subtotal": 500000
+    }
+]
+```
+
+### Add to Parcel
+Request:
+- Method: POST
+- Endpoint: `/transaction/addParcel`
+- Header:
+    - Authorization: Bearer Token
+- Body:
+```json
+{
+    "idcart": 113,
+    "idparcel_type": 1,
+    "idproduct": 1,
+    "idcategory": 1,
+    "amount": 2,
+    "subtotal": 130000
+}
+```
+Response:
+```json
+{
+    "message": "Success!"
+}
+```
+
+### Read Cart
+Request:
+- Method: GET
+- Endpoint: `/transaction/getcart`
+- Header:
+    - Authorization: Bearer Token
+Response:
+```json
+[
+    {
+        "idcart": 113,
+        "iduser": 19,
+        "idparcel_type": 1,
+        "idstatus": 1,
+        "subtotal": 500000,
+        "title": "5 foods",
+        "detail": [
+            {
+                "id": 242,
+                "idcart": 113,
+                "iduser": 19,
+                "idparcel_type": 1,
+                "idproduct": 1,
+                "idcategory": 1,
+                "amount": 2,
+                "subtotal": 130000,
+                "name": "Hershey Chocolate Kisses Milk Almoond",
+                "price": 65000,
+                "title": "food",
+                "url": "1.jpg"
+            }
+        ]
+    }
+]
+```
+
+### Read Cart Detail
+Request:
+- Method: GET
+- Endpoint: `/transaction/getcart-detail`
+- Header:
+    - Authorization: Bearer Token
+Response:
+```json
+[
+    {
+        "id": 242,
+        "idcart": 113,
+        "iduser": 19,
+        "idparcel_type": 1,
+        "idproduct": 1,
+        "idcategory": 1,
+        "amount": 2,
+        "subtotal": 130000,
+    }
+]
+```
+
+### Checkout
+Request:
+- Method: POST
+- Endpoint: `/transaction/checkout`
+- Header:
+    - Authorization: Bearer Token
+- Body:
+```json
+{
+    "invoice": "#PP/16289896",
+    "amount": 1,
+    "idaddress": 24,
+    "subtotal_product": 325000,
+    "subtotal_parcel": 500000,
+    "ongkir": 9000,
+    "total_payment": 334000,
+    "idpayment_status": 2,
+    "detail": [
+        {
+            "id": 242,
+            "idcart": 113,
+            "iduser": 19,
+            "idparcel_type": 1,
+            "idproduct": 1,
+            "idcategory": 1,
+            "amount": 5,
+            "subtotal": 325000
+        }
+    ]
+}
+```
+Response:
+```json
+{
+    "success": true,
+    "message": "Checkout Success'
+}
+```
+
+### Read Transaction
+Request:
+- Method: GET
+- Endpoint: `/transaction`
+- Header:
+    - Authorization: Bearer Token
+Response:
+```json
+{
+    "id": 19,
+    "invoice": "#PP/16289896",
+    "date_transaction": "2021-08-09T06:38:16.000Z",
+    "date_payment": null,
+    "iduser": 19,
+    "idaddress": 24,
+    "amount": 1,
+    "subtotal_product": 325000,
+    "subtotal_parcel": 500000,
+    "ongkir": 9000,
+    "total_payment": 334000,
+    "idpayment_status": 2,
+    "url_payment_image": null,
+    "username": "afiafi",
+    "address": "Taman Induk 44 Cipayung Depok",
+    "phone_number": "081908144055",
+    "title": "ongoing",
+    "detail": [
+        {
+            "id": 27,
+            "idtransaksi": 19,
+            "idparcel_type": 1,
+            "idproduct": 1,
+            "idcategory": 1,
+            "amount": 5,
+            "parcel": 1,
+            "name": "Hershey Chocolate Kisses Milk Almoond",
+            "url": "1.jpg",
+            "title": "food"
+        }
+    ]
+}
+```
+
+### Update Quantity in Cart
+Request:
+- Method: PATCH
+- Endpoint: `/transaction/update-qty`
+- Header:
+    - Authorization: Bearer Token
+- Body:
+```json
+{
+    "amount": 4,
+    "idproduct": 1,
+    "idcart": 116,
+    "subtotal": 260000,
+}
+```
+Response:
+```json
+{
+    "status": "Success",
+    "results": {
+        "fieldCount": 0,
+        "affectedRows": 1,
+        "insertId": 0,
+        "serverStatus": 34,
+        "warningCount": 0,
+        "message": "(Rows matched: 1 Changed: 1 Warnings: 0",
+        "protocol41": true,
+        "changedRows": 1
+    }
+}
+```
+
+### Delete Cart
+Request:
+- Method: PATCH
+- Endpoint: `/transaction/del-cart`
+- Header:
+    - Authorization: Bearer Token
+- Body:
+```json
+{
+    "idcart": 116
+}
+```
+Response:
+```json
+{
+    "status": "Success delete cart"
+}
+```
+
+### Shipping Cost
+Request:
+- Method: POST
+- Endpoint: `/ongkir/cost`
+- Header:
+    - Authorization: Bearer Token
+- Body:
+```json
+{
+    "origin": 152,
+    "destination": 115,
+    "weight": 1000
+}
+```
+Response:
+```json
+[
+    {
+        "cost": [
+            {
+                "value": 8000,
+                "etd": "2-3",
+                "note": ""
+            }
+        ]
+    },
+    {
+        "cost": [
+            {
+                "value": 9000,
+                "etd": "1-2",
+                "note": ""
+            }
+        ]
+    },
+    {
+        "cost": [
+            {
+                "value": 18000,
+                "etd": "1-1",
+                "note": ""
+            }
+        ]
+    }
+]
 ```
