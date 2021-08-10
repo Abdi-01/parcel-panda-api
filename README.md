@@ -15,6 +15,7 @@ Request:
     "password": "afi1234"
 }
 ```
+
 Response:
 ```json
 {
@@ -34,6 +35,7 @@ Request:
     "password": "afi1234"
 }
 ```
+
 Response:
 ```json
 {
@@ -61,6 +63,7 @@ Request:
     "otp": "wvxlw7"
 }
 ```
+
 Response:
 ```json
 {
@@ -75,10 +78,11 @@ Request:
 - Body:
 ```json
 {
-    "email": "ssafinatunnajah@gmail.com"
+    "email": "ssafinatunnajah@gmail.com",
     "password": "afi4321"
 }
 ```
+
 Response:
 ```json
 {
@@ -91,6 +95,7 @@ Response:
 Request:
 - Method: GET
 - Endpoint: `/auth/get`
+
 Response:
 ```json
 {
@@ -116,6 +121,7 @@ Request:
 - Endpoint: `/profile/`
 - Header:
     - Authorization: Bearer Token
+
 Response:
 ```json 
 {
@@ -167,6 +173,7 @@ Request:
   "date_birth": "1996-01-18"
 }
 ```
+
 Response:
 ```json
 {
@@ -192,6 +199,7 @@ Request:
   "address": "Raccoon City"
 }
 ```
+
 Response:
 ```json
 {
@@ -213,6 +221,7 @@ Request:
   "date_birth": "1996-01-18"
 }
 ```
+
 Response:
 ```json
 {
@@ -234,6 +243,7 @@ Request:
   "date_birth": "1996-01-18"
 }
 ```
+
 Response:
 ```json
 {
@@ -247,6 +257,7 @@ Request:
 - Endpoint: `/profile/city`
 - Header:
     - Authorization: Bearer Token
+
 Response:
 ```json
 [
@@ -278,6 +289,7 @@ Response:
 Request:
 - Method: GET
 - Endpoint: `/parcel/get-parcel`
+
 Response:
 ```json 
 {
@@ -303,6 +315,7 @@ Response:
 Request:
 - Method: GET
 - Endpoint: `/parcel/getParcel-type`
+
 Response:
 ```json 
 {
@@ -318,6 +331,7 @@ Response:
 Request:
 - Method: GET
 - Endpoint: `/product`
+
 Response:
 ```json 
 {
@@ -342,6 +356,7 @@ Request:
     "stock": 12
 }
 ```
+
 Response:
 ```json 
 {
@@ -357,6 +372,7 @@ Request:
 - Endpoint: `/product-manage/read/:limit/:offset?{query}`
 - Header:
     - Authorization: Bearer Token
+
 Response:
 ```json 
 {
@@ -436,6 +452,7 @@ Request:
     "price": 33000
 }
 ```
+
 Response:
 ```json 
 {
@@ -459,6 +476,7 @@ Request:
     "price": 33000
 }
 ```
+
 Response:
 ```json 
 {
@@ -472,6 +490,7 @@ Request:
 - Endpoint: `/product-manage/delete/:id`
 - Header:
     - Authorization: Bearer Token
+
 Response:
 ```json 
 {
@@ -487,6 +506,7 @@ Request:
 - Endpoint: `/transaction-manage/:limit/:offset?{query}`
 - Header:
     - Authorization: Bearer Token
+
 Response:
 ```json
 {
@@ -562,6 +582,7 @@ Request:
 - Endpoint: `/transaction-manage/action/:id?{query}`
 - Header:
     - Authorization: Bearer Token
+
 Response:
 ```json 
 {
@@ -577,6 +598,7 @@ Request:
 - Endpoint: `/financial-report/revenue?{query}`
 - Header:
     - Authorization: Bearer Token
+
 Response:
 ```json 
 {
@@ -624,6 +646,7 @@ Request:
 - Endpoint: `/financial-report/item?{query}`
 - Header:
     - Authorization: Bearer Token
+
 Response:
 ```json 
 {
@@ -677,6 +700,7 @@ Request:
     "subtotal": 500000
 }
 ```
+
 Response:
 ```json
 [
@@ -707,6 +731,7 @@ Request:
     "subtotal": 130000
 }
 ```
+
 Response:
 ```json
 {
@@ -720,6 +745,7 @@ Request:
 - Endpoint: `/transaction/getcart`
 - Header:
     - Authorization: Bearer Token
+
 Response:
 ```json
 [
@@ -756,6 +782,7 @@ Request:
 - Endpoint: `/transaction/getcart-detail`
 - Header:
     - Authorization: Bearer Token
+
 Response:
 ```json
 [
@@ -803,6 +830,7 @@ Request:
     ]
 }
 ```
+
 Response:
 ```json
 {
@@ -817,6 +845,7 @@ Request:
 - Endpoint: `/transaction`
 - Header:
     - Authorization: Bearer Token
+
 Response:
 ```json
 {
@@ -869,6 +898,7 @@ Request:
     "subtotal": 260000,
 }
 ```
+
 Response:
 ```json
 {
@@ -898,6 +928,7 @@ Request:
     "idcart": 116
 }
 ```
+
 Response:
 ```json
 {
@@ -919,6 +950,7 @@ Request:
     "weight": 1000
 }
 ```
+
 Response:
 ```json
 [
