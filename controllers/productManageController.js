@@ -49,7 +49,7 @@ module.exports = {
             try {
                 let role = req.user.role
                 let data = JSON.parse(req.body.data)
-                // console.log("Data =>", data)
+                console.log("Data =>", data)
                 // console.log("Cek file upload => ", req.files.images[0].filename)
                 if (role === 'admin') {
                     let querySelectImage = `SELECT url FROM product WHERE id = ${db.escape(data.id)}`
