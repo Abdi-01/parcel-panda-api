@@ -1,4 +1,4 @@
-# ParcelPanda API Documentation
+# Parcel Panda API Documentation
 
 ## Authentication
 
