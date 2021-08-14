@@ -75,7 +75,7 @@ Request:
 - Body:
 ```json
 {
-    "email": "ssafinatunnajah@gmail.com"
+    "email": "ssafinatunnajah@gmail.com",
     "password": "afi4321"
 }
 ```
