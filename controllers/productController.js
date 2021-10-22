@@ -19,9 +19,9 @@ module.exports = {
             }
             console.log(dataSearch.join(' AND '))
             if (dataSearch.length > 0) {
-                getSQL = `Select p.*, c.title as category from product p join category c on p.idcategory = c.id where idcategory in (${dataSearch.join(' , ')});`
+                getSQL = `Select p.*, c.title as category from product p join category c on p.idcategory = c.id where p.idstatus = 3 and idcategory in (${dataSearch.join(' , ')});`
             } else {
-                getSQL = `Select  p.*, c.title as category from product p join category c on p.idcategory = c.id;`
+                getSQL = `Select  p.*, c.title as category from product p join category c on p.idcategory = c.id where p.idstatus = 3;`
             }
             let get = await dbQuery(getSQL)
             res.status(200).send(get)

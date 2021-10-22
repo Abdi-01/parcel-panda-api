@@ -75,7 +75,7 @@ Request:
 - Body:
 ```json
 {
-    "email": "ssafinatunnajah@gmail.com"
+    "email": "ssafinatunnajah@gmail.com",
     "password": "afi4321"
 }
 ```
@@ -427,7 +427,7 @@ Request:
 - Endpoint: `/product-manage/add-product`
 - Header:
     - Authorization: Bearer Token
-- Body:
+- Form data:
 ```json
 {
     "name": "Avocado Lampung",
@@ -884,6 +884,24 @@ Response:
         "changedRows": 1
     }
 }
+```
+
+### Upload Payment
+Request:
+- Method: PATCH
+- Endpoint: `/transaction/payment`
+- Header:
+    - Authorization: Bearer Token
+- Form data:
+```json
+{
+    "images": "92ea8d25-77a7-486a-8a8c-8b575cd4e7be.jpg",
+    "data": "{id: 22, date_payment: 2021-08-09 15:22:48}" 
+}
+```
+Response:
+```json
+{ "message": "Thankyou, We will process your payment" }
 ```
 
 ### Delete Cart
